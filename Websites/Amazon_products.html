@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>
+
+    </title>
+    <style>
+      body {
+        height: 6000px;
+      }
+      .header {
+        display: flex;
+        flex-direction: row;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        padding-left: 20px;
+        padding-right: 20px;
+
+        background-color: black;
+        color: white;
+        align-items: center;
+        height: 60px;
+      }
+      
+      .amazon-logo {
+        width: 120px;
+        height: 32px;
+        object-fit: contain;
+        padding: 0;
+        margin-top: 6px;
+      }
+
+      .middle-section {
+        flex: 1;
+        display: flex;
+        min-width: 10px;
+        justify-content: center;
+        align-items: center;
+        margin-left: 40px;
+        margin-right: 40px;
+      }
+      
+
+      .search-box {
+        flex: 1;
+        border: none;
+        border-top-left-radius: 4px;
+        border-bottom-left-radius: 4px;
+        min-width: 10px;
+
+        padding: 11px 16px;
+        font-size: 15px;
+      }
+
+      .search-button {
+        width: 46px;
+        height: 39px;
+        min-width: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: rgb(244, 165, 108);
+
+        border: none;
+        border-top-right-radius: 4px;
+        border-bottom-right-radius: 4px;
+
+        margin-left: -1px;
+        cursor: pointer;
+      }
+      .search-button-icon {
+        width: 22px;
+        height: 24px;
+
+        object-fit: contain;
+      }
+      
+
+      .right-section {
+        display: flex;
+        flex: row;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .cart-text,.product-number,.return-and-orders {
+        display: inline-block;
+        
+      }
+      .return-text {
+        color: white;
+        font-family: Arial;
+        font-size: 14px;
+        margin: 0;
+      }
+      .orders-text {
+        font-weight: bold;
+      }
+      .return-and-orders-anchor {
+        width: 60px;
+      }
+      .cart-anchor {
+        display: flex;
+        justify-content: center;
+        position: relative;
+        align-items: center;
+        margin-left: 10px;
+      }
+      .cart-icon {
+        width: 44px;
+        height: 44px;
+        object-fit: contain;
+      }
+      .cart-text {
+        color: white;
+        font-family: Arial;
+        font-size: 14px;
+        font-weight: bold;
+        font-size: 13px;
+
+        margin-top: 10px;
+        margin-bottom: 0;
+      }
+      .product-number {
+        color: orange;
+        font-family: Arial;
+        font-size: 15px;
+        font-weight: bold;
+        position: absolute;
+        margin: 0px;
+        top: 3px;
+        left: 22px;
+      }
+    </style>
+  </head>
+  <body style="padding-top: 60px;">
+    <div class="header">
+      <div class="left-section">
+        <a class="amazon-logo-anchor" href="https://google.com" target="_blank">
+          <img class="amazon-logo" src="../Images/icon-image/amazon-logo-white.jpg">
+        </a>
+      </div>
+      
+      
+      <div class="middle-section">
+        <input class="search-box" type="text" placeholder="Search">
+        <button class="search-button">
+          <img class="search-button-icon" src="../Images/icon-image/search-icon.jpg">
+        </button> 
+      </div>
+      
+
+      <div class="right-section">
+        <a class="return-and-orders-anchor" href="https://google.com" target="_blank">
+          <p class="return-text">
+            Returns 
+            <span class="orders-text">
+              & Orders
+            </span>
+          </p>
+        </a>
+        
+        <a class="cart-anchor" href="https://google.com" target="_blank">
+          <img class="cart-icon" src="../Images/icon-image/cart-icon.jpg">
+          <p class="cart-text">
+            Cart
+          </p>
+          <p class="product-number">
+            3
+          </p>
+        </a>
+      </div>
+    </div>
+    <div class="products-content">
+      abc
+    </div>
+  </body>
+</html>
