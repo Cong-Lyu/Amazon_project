@@ -11,6 +11,13 @@
   min-width: 140px;
   padding: 25px 25px;
 }
+.product-image-container {
+  display: flex;
+  height: 180px;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+}
 .product-img {
   max-width: 100%;
   max-height: 100%;
