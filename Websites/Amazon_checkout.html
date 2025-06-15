@@ -4,46 +4,10 @@
     <title>
       Checkout
     </title>
+    <link rel="stylesheet" href="../Styles/checkout_website_header.css">
+    <link rel="stylesheet" href="../Styles/checkout_website_cart.css">
     <style>
-      .header {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        justify-content: space-between;
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-
-        height: 55px;
-      }
-      .amazon-logo-checkout {
-        width: 98px;
-        height: 28px;
-        object-fit: contain;
-        margin-left: 24px;
-        margin-top: 10px;
-      }
-      .checkout-header-title {
-        font-family: Arial;
-        font-weight: bold;
-        font-size: 22px;
-        height: 20px;
-        width: 200px;
-        margin-left: -60px;
-      }
-      .items-anchor {
-        color: rgb(2, 135, 135);
-      }
-      .items-anchor:hover {
-        cursor: pointer;
-      }
-      .ckeckoutPage-lock-icon {
-        height: 19px;
-        width: 19px;
-        object-fit: contain;
-        margin-right: 24px;
-      }
+      
     </style>
   </head>
   <body style="height: 6000px; padding-top: 120px;">
@@ -54,5 +18,188 @@
       </p>
       <img class="ckeckoutPage-lock-icon" src="../Images/icon-image/checkout-lock-icon.jpg">
     </div>
+
+    <div class="ckeckout-content">
+      <p class="checkout-prompt">Review your order</p>
+      <div class="checkout-content-container">
+        <div class="cart-items-content">
+          <div class="cart-item-container">
+            <p class="selected-delivery-date">Delivery date: </p>
+            <div class="cart-item-info-container">
+              <img class="cart-item-img" src="../Images/products-image/athletic-cotton-socks-6-pairs.jpg">
+              
+              <div class="cart-product-info">
+                <p class="cart-product-description">
+                  Black and Gray Athletic Cotton Socks - 6 Pairs
+                </p>
+                <p class="cart-product-price">
+                  $10.90
+                </p>
+                <div class="cart-product-quantity-and-buttons">
+                  <p class="cart-product-quantity">
+                    Quantity: 6
+                  </p>
+                  <button class="cart-product-update-button  cart-product-behave">
+                    Update
+                  </button>
+                  <button class="cart-product-delete-button  cart-product-behave">
+                    Delete
+                  </button>
+                </div>
+              </div>
+              
+              <div class="cart-products-delivery-description">
+                <p class="cart-delivery-prompt">Choose a delivery option</p>
+                
+                <div class="cart-delivery-options-container">
+                  <input class="cart-delivery-option-selector" name="a1" type="radio">
+                  
+                  <div class="cart-deliver-arrival-date">
+                    <p class="cart-delivery-date">
+                      Tuesday, June 24
+                    </p>
+                    
+                    <p class="cart-delivery-shipping-description">
+                      FREE Shipping
+                    </p>
+                  </div>
+                </div>
+
+                <div class="cart-delivery-options-container">
+                  <input class="cart-delivery-option-selector" name="a1" type="radio">
+                  
+                  <div class="cart-deliver-arrival-date">
+                    <p class="cart-delivery-date">
+                      Wednesday, June 18
+                    </p>
+                    
+                    <p class="cart-delivery-shipping-description">
+                      $4.99 - Shipping
+                    </p>
+                  </div>
+                </div>
+
+                <div class="cart-delivery-options-container">
+                  <input class="cart-delivery-option-selector" name="a1" type="radio">
+                  
+                  <div class="cart-deliver-arrival-date">
+                    <p class="cart-delivery-date">
+                      Monday, June 16
+                    </p>
+                    
+                    <p class="cart-delivery-shipping-description">
+                      $9.99 - Shipping
+                    </p>
+                  </div>
+                </div>
+                  
+              </div>
+            </div>
+          </div>
+
+          <div class="cart-item-container">
+            <p class="selected-delivery-date">Delivery date: </p>
+            <div class="cart-item-info-container">
+              <img class="cart-item-img" src="../Images/products-image/athletic-cotton-socks-6-pairs.jpg">
+              
+              <div class="cart-product-info">
+                <p class="cart-product-description">
+                  Black and Gray Athletic Cotton Socks - 6 Pairs
+                </p>
+                <p class="cart-product-price">
+                  $10.90
+                </p>
+                <div class="cart-product-quantity-and-buttons">
+                  <p class="cart-product-quantity">
+                    Quantity: 6
+                  </p>
+                  <button class="cart-product-update-button  cart-product-behave">
+                    Update
+                  </button>
+                  <button class="cart-product-delete-button  cart-product-behave">
+                    Delete
+                  </button>
+                </div>
+              </div>
+              
+              <div class="cart-products-delivery-description">
+                <p class="cart-delivery-prompt">Choose a delivery option</p>
+                
+                <div class="cart-delivery-options-container">
+                  <input class="cart-delivery-option-selector" name="a2" type="radio">
+                  
+                  <div class="cart-deliver-arrival-date">
+                    <p class="cart-delivery-date">
+                      Tuesday, June 24
+                    </p>
+                    
+                    <p class="cart-delivery-shipping-description">
+                      FREE Shipping
+                    </p>
+                  </div>
+                </div>
+
+                <div class="cart-delivery-options-container">
+                  <input class="cart-delivery-option-selector" name="a2" type="radio">
+                  
+                  <div class="cart-deliver-arrival-date">
+                    <p class="cart-delivery-date">
+                      Wednesday, June 18
+                    </p>
+                    
+                    <p class="cart-delivery-shipping-description">
+                      $4.99 - Shipping
+                    </p>
+                  </div>
+                </div>
+
+                <div class="cart-delivery-options-container">
+                  <input class="cart-delivery-option-selector" name="a2" type="radio">
+                  
+                  <div class="cart-deliver-arrival-date">
+                    <p class="cart-delivery-date">
+                      Monday, June 16
+                    </p>
+                    
+                    <p class="cart-delivery-shipping-description">
+                      $9.99 - Shipping
+                    </p>
+                  </div>
+                </div>
+                  
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="cart-summary-content">
+          <p class="cart-summary-title">Order Summary</p>
+          <div class="cart-summary-item">
+            <p class="cart-summary-item-name">Items (8):</p>
+            <p class="cart-summary-item-price">$107.02</p>
+          </div>
+          <div class="cart-summary-item">
+            <p class="cart-summary-item-name">Shipping & handling:</p>
+            <p class="cart-summary-item-price">$4.99</p>
+          </div>
+          <div class="cart-summary-item">
+            <p class="cart-summary-item-name">Total before tax:</p>
+            <p class="cart-summary-item-price">$112.01</p>
+          </div>
+          <div class="cart-summary-item cart-summary-last-item">
+            <p class="cart-summary-item-name">Estimated tax (10%):</p>
+            <p class="cart-summary-item-price">$11.20</p>
+          </div>
+          <div class="cart-summary-item cart-summary-total-item">
+            <p class="cart-summary-item-name">Order total:</p>
+            <p class="cart-summary-item-price">$123.21</p>
+          </div>
+          <button class="cart-place-order-button">Place your order</button>
+        </div>
+      </div>
+    </div>
+    <script type="module">
+
+    </script>
   </body>
 </html>
