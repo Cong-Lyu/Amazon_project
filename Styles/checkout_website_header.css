@@ -1,0 +1,40 @@
+.header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+
+  height: 55px;
+  background-color: white;
+}
+.amazon-logo-checkout {
+  width: 98px;
+  height: 28px;
+  object-fit: contain;
+  margin-left: 24px;
+  margin-top: 10px;
+}
+.checkout-header-title {
+  font-family: Arial;
+  font-weight: bold;
+  font-size: 22px;
+  height: 20px;
+  width: 200px;
+  margin-left: -60px;
+}
+.items-anchor {
+  color: rgb(2, 135, 135);
+}
+.items-anchor:hover {
+  cursor: pointer;
+}
+.ckeckoutPage-lock-icon {
+  height: 19px;
+  width: 19px;
+  object-fit: contain;
+  margin-right: 24px;
+}
