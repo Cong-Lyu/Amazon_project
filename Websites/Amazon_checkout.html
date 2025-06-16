@@ -23,154 +23,7 @@
       
       <div class="checkout-content-container">
         <div class="cart-items-content">
-          <p class="checkout-prompt">Review your order</p>
-          <div class="cart-item-container">
-            <p class="selected-delivery-date">Delivery date: </p>
-            <div class="cart-item-info-container">
-              <img class="cart-item-img" src="../Images/products-image/athletic-cotton-socks-6-pairs.jpg">
-              
-              <div class="cart-product-info">
-                <p class="cart-product-description">
-                  Black and Gray Athletic Cotton Socks - 6 Pairs
-                </p>
-                <p class="cart-product-price">
-                  $10.90
-                </p>
-                <div class="cart-product-quantity-and-buttons">
-                  <p class="cart-product-quantity">
-                    Quantity: 6
-                  </p>
-                  <button class="cart-product-update-button  cart-product-behave">
-                    Update
-                  </button>
-                  <button class="cart-product-delete-button  cart-product-behave">
-                    Delete
-                  </button>
-                </div>
-              </div>
-              
-              <div class="cart-products-delivery-description">
-                <p class="cart-delivery-prompt">Choose a delivery option</p>
-                
-                <div class="cart-delivery-options-container">
-                  <input class="cart-delivery-option-selector" name="a1" type="radio">
-                  
-                  <div class="cart-deliver-arrival-date">
-                    <p class="cart-delivery-date">
-                      Tuesday, June 24
-                    </p>
-                    
-                    <p class="cart-delivery-shipping-description">
-                      FREE Shipping
-                    </p>
-                  </div>
-                </div>
-
-                <div class="cart-delivery-options-container">
-                  <input class="cart-delivery-option-selector" name="a1" type="radio">
-                  
-                  <div class="cart-deliver-arrival-date">
-                    <p class="cart-delivery-date">
-                      Wednesday, June 18
-                    </p>
-                    
-                    <p class="cart-delivery-shipping-description">
-                      $4.99 - Shipping
-                    </p>
-                  </div>
-                </div>
-
-                <div class="cart-delivery-options-container">
-                  <input class="cart-delivery-option-selector" name="a1" type="radio">
-                  
-                  <div class="cart-deliver-arrival-date">
-                    <p class="cart-delivery-date">
-                      Monday, June 16
-                    </p>
-                    
-                    <p class="cart-delivery-shipping-description">
-                      $9.99 - Shipping
-                    </p>
-                  </div>
-                </div>
-                  
-              </div>
-            </div>
-          </div>
-
-          <div class="cart-item-container">
-            <p class="selected-delivery-date">Delivery date: </p>
-            <div class="cart-item-info-container">
-              <img class="cart-item-img" src="../Images/products-image/athletic-cotton-socks-6-pairs.jpg">
-              
-              <div class="cart-product-info">
-                <p class="cart-product-description">
-                  Black and Gray Athletic Cotton Socks - 6 Pairs
-                </p>
-                <p class="cart-product-price">
-                  $10.90
-                </p>
-                <div class="cart-product-quantity-and-buttons">
-                  <p class="cart-product-quantity">
-                    Quantity: 6
-                  </p>
-                  <button class="cart-product-update-button  cart-product-behave">
-                    Update
-                  </button>
-                  <button class="cart-product-delete-button  cart-product-behave">
-                    Delete
-                  </button>
-                </div>
-              </div>
-              
-              <div class="cart-products-delivery-description">
-                <p class="cart-delivery-prompt">Choose a delivery option</p>
-                
-                <div class="cart-delivery-options-container">
-                  <input class="cart-delivery-option-selector" name="a2" type="radio">
-                  
-                  <div class="cart-deliver-arrival-date">
-                    <p class="cart-delivery-date">
-                      Tuesday, June 24
-                    </p>
-                    
-                    <p class="cart-delivery-shipping-description">
-                      FREE Shipping
-                    </p>
-                  </div>
-                </div>
-
-                <div class="cart-delivery-options-container">
-                  <input class="cart-delivery-option-selector" name="a2" type="radio">
-                  
-                  <div class="cart-deliver-arrival-date">
-                    <p class="cart-delivery-date">
-                      Wednesday, June 18
-                    </p>
-                    
-                    <p class="cart-delivery-shipping-description">
-                      $4.99 - Shipping
-                    </p>
-                  </div>
-                </div>
-
-                <div class="cart-delivery-options-container">
-                  <input class="cart-delivery-option-selector" name="a2" type="radio">
-                  
-                  <div class="cart-deliver-arrival-date">
-                    <p class="cart-delivery-date">
-                      Monday, June 16
-                    </p>
-                    
-                    <p class="cart-delivery-shipping-description">
-                      $9.99 - Shipping
-                    </p>
-                  </div>
-                </div>
-                  
-              </div>
-            </div>
-          </div>
+          
         </div>
 
         <div class="cart-summary-content">
@@ -200,7 +53,88 @@
       </div>
     </div>
     <script type="module">
+      import dayjs from 'https://unpkg.com/dayjs@1.11.13/esm/index.js';
+      import {products} from '../Scripts/products.js';
+      import {cart} from '../Scripts/cart.js'
+      
+      let cartItemsHTML = `<p class="checkout-prompt">Review your order</p>`;
+      const cartItemsContent = document.querySelector('.cart-items-content');
+      cart.forEach((item, index) => {
+        const targetProduct = products.find(target => target.productId === item.productId);
+        cartItemsHTML += `
+        <div class="cart-item-container">
+          <div class="cart-item-info-container">
+            <img class="cart-item-img" src="../Images/products-image/${targetProduct.productImageName}.jpg">
+            <div class="cart-product-info">
+              <p class="cart-product-description">
+                ${targetProduct.productName}
+              </p>
+              <p class="cart-product-price">
+                $${String((targetProduct.productPriceCents / 100).toFixed(2))}
+              </p>
+              <div class="cart-product-quantity-and-buttons">
+                <p class="cart-product-quantity">
+                  Quantity: ${item.productQuantity}
+                </p>
+                <button class="cart-product-update-button  cart-product-behave">
+                  Update
+                </button>
+                <button class="cart-product-delete-button  cart-product-behave">
+                  Delete
+                </button>
+              </div>
+            </div>
+            
+            <div class="cart-products-delivery-description">
+              <p class="cart-delivery-prompt">Choose a delivery option</p>
+              
+              <div class="cart-delivery-options-container">
+                <input class="cart-delivery-option-selector" name="a1" type="radio">
+                
+                <div class="cart-deliver-arrival-date">
+                  <p class="cart-delivery-date">
+                    ${dayjs().add(7, 'day')}
+                  </p>
+                  
+                  <p class="cart-delivery-shipping-description">
+                    FREE Shipping
+                  </p>
+                </div>
+              </div>
 
+              <div class="cart-delivery-options-container">
+                <input class="cart-delivery-option-selector" name="a1" type="radio">
+                
+                <div class="cart-deliver-arrival-date">
+                  <p class="cart-delivery-date">
+                    ${dayjs().add(4, 'day')}
+                  </p>
+                  
+                  <p class="cart-delivery-shipping-description">
+                    $4.99 - Shipping
+                  </p>
+                </div>
+              </div>
+
+              <div class="cart-delivery-options-container">
+                <input class="cart-delivery-option-selector" name="a1" type="radio">
+                
+                <div class="cart-deliver-arrival-date">
+                  <p class="cart-delivery-date">
+                    ${dayjs().add(1, 'day')}
+                  </p>
+                  
+                  <p class="cart-delivery-shipping-description">
+                    $9.99 - Shipping
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>`
+      })
+      console.log(cartItemsHTML);
+      cartItemsContent.innerHTML = cartItemsHTML;
     </script>
   </body>
 </html>
