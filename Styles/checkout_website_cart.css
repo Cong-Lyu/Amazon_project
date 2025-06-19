@@ -27,7 +27,11 @@
   padding: 20px 15px;
   margin-bottom: 12px;
 }
-
+.delivery-date {
+  margin-top: 0;
+  font-weight: bold;
+  color: rgb(2, 129, 2);
+}
 .selected-delivery-date {
   font-family: Arial;
   font-weight: bold;

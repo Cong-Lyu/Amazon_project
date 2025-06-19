@@ -63,6 +63,7 @@
         const targetProduct = products.find(target => target.productId === item.productId);
         cartItemsHTML += `
         <div class="cart-item-container">
+          <p class="delivery-date">Delivery date:</p>
           <div class="cart-item-info-container">
             <img class="cart-item-img" src="../Images/products-image/${targetProduct.productImageName}.jpg">
             <div class="cart-product-info">
