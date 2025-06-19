@@ -164,4 +164,12 @@
   border: none;
   border-radius: 8px;
   box-shadow: 0px 1px 2px rgb(201, 201, 201);
+  cursor: pointer;
+  transition: 0.15s;
+}
+.cart-place-order-button:hover {
+  background-color: rgb(230, 192, 26);
+}
+.cart-place-order-button:active {
+  background-color: rgb(255, 208, 0);
 }
