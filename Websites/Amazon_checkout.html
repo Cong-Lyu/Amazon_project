@@ -63,7 +63,7 @@
         const targetProduct = products.find(target => target.productId === item.productId);
         cartItemsHTML += `
         <div class="cart-item-container">
-          <p class="delivery-date">Delivery date:</p>
+          <p class="delivery-date a${item.productId}">Delivery date: please select an option below</p>
           <div class="cart-item-info-container">
             <img class="cart-item-img" src="../Images/products-image/${targetProduct.productImageName}.jpg">
             <div class="cart-product-info">
@@ -90,11 +90,11 @@
               <p class="cart-delivery-prompt">Choose a delivery option</p>
               
               <div class="cart-delivery-options-container">
-                <input class="cart-delivery-option-selector" name="a1" type="radio">
+                <input class="cart-delivery-option-selector" name="a${item.productId}" value="${dayjs().add(7, 'day').format('ddd, DD MMM YYYY')}" type="radio">
                 
                 <div class="cart-deliver-arrival-date">
                   <p class="cart-delivery-date">
-                    ${dayjs().add(7, 'day')}
+                    ${dayjs().add(7, 'day').format('ddd, DD MMM YYYY')}
                   </p>
                   
                   <p class="cart-delivery-shipping-description">
@@ -104,11 +104,11 @@
               </div>
 
               <div class="cart-delivery-options-container">
-                <input class="cart-delivery-option-selector" name="a1" type="radio">
+                <input class="cart-delivery-option-selector" name="a${item.productId}" value="${dayjs().add(4, 'day').format('ddd, DD MMM YYYY')}" type="radio">
                 
                 <div class="cart-deliver-arrival-date">
                   <p class="cart-delivery-date">
-                    ${dayjs().add(4, 'day')}
+                    ${dayjs().add(4, 'day').format('ddd, DD MMM YYYY')}
                   </p>
                   
                   <p class="cart-delivery-shipping-description">
@@ -118,11 +118,11 @@
               </div>
 
               <div class="cart-delivery-options-container">
-                <input class="cart-delivery-option-selector" name="a1" type="radio">
+                <input class="cart-delivery-option-selector" name="a${item.productId}" value="${dayjs().add(1, 'day').format('ddd, DD MMM YYYY')}" type="radio">
                 
                 <div class="cart-deliver-arrival-date">
                   <p class="cart-delivery-date">
-                    ${dayjs().add(1, 'day')}
+                    ${dayjs().add(1, 'day').format('ddd, DD MMM YYYY')}
                   </p>
                   
                   <p class="cart-delivery-shipping-description">
@@ -134,8 +134,18 @@
           </div>
         </div>`
       })
-      console.log(cartItemsHTML);
+      //console.log(cartItemsHTML);
       cartItemsContent.innerHTML = cartItemsHTML;
+
+      
+      const deliveryDateSelector = document.querySelectorAll('.cart-delivery-option-selector');
+      deliveryDateSelector.forEach((item, index) => {
+        item.addEventListener('click', () => {
+          const deliverydate = document.querySelector(`.${item.name}`)
+          console.log(deliverydate);
+          deliverydate.innerText = `Delivery date: ${item.value}`;
+        })
+      });
     </script>
   </body>
 </html>
