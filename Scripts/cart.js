@@ -1,4 +1,4 @@
-export const cart = [{
+export let cart = [{
   productId: 'sa21dk12ks1o',
   productQuantity: 6,
   productDropDate: '2025-06-05'

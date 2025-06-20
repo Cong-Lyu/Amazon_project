@@ -173,3 +173,9 @@
 .cart-place-order-button:active {
   background-color: rgb(255, 208, 0);
 }
+
+
+.cart-item-quantity-update {
+  width: 46px;
+  padding: 1px 2px;
+}
