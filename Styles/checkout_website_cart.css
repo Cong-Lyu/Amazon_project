@@ -27,7 +27,11 @@
   padding: 20px 15px;
   margin-bottom: 12px;
 }
-
+.delivery-date {
+  margin-top: 0;
+  font-weight: bold;
+  color: rgb(2, 129, 2);
+}
 .selected-delivery-date {
   font-family: Arial;
   font-weight: bold;
@@ -160,4 +164,18 @@
   border: none;
   border-radius: 8px;
   box-shadow: 0px 1px 2px rgb(201, 201, 201);
+  cursor: pointer;
+  transition: 0.15s;
+}
+.cart-place-order-button:hover {
+  background-color: rgb(230, 192, 26);
+}
+.cart-place-order-button:active {
+  background-color: rgb(255, 208, 0);
+}
+
+
+.cart-item-quantity-update {
+  width: 46px;
+  padding: 1px 2px;
 }

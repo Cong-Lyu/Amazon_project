@@ -16,11 +16,11 @@
 .left-section {
   padding-top: 5px;
   padding-bottom: 5px;
+  border: 1px solid transparent;
+  transition: 0.15s;
 }
 .left-section:hover {
-  border-style: solid;
-  border-color: white;
-  border-width: 1px;
+  border: 1px solid white;
 }
 .amazon-logo {
   width: 100px;
@@ -82,7 +82,14 @@
   justify-content: center;
   align-items: center;
 }
-
+.return-and-orders-anchor {
+  width: 60px;
+  border: 1px solid transparent;
+  transition: 0.15s;
+}
+.return-and-orders-anchor:hover {
+  border: 1px solid white;
+}
 .cart-text,.product-number,.return-and-orders {
   display: inline-block;
   
@@ -96,15 +103,17 @@
 .orders-text {
   font-weight: bold;
 }
-.return-and-orders-anchor {
-  width: 60px;
-}
 .cart-anchor {
   display: flex;
   justify-content: center;
   position: relative;
   align-items: center;
   margin-left: 10px;
+  border: 1px solid transparent;
+  transition: 0.15s;
+}
+.cart-anchor:hover {
+  border: 1px solid white;
 }
 .cart-icon {
   width: 44px;
