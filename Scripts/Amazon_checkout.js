@@ -1,6 +1,5 @@
-import dayjs from 'https://unpkg.com/dayjs@1.11.13/esm/index.js';
 import {products} from './products.js';
-import {cart} from './cart.js'
+import {cart, sumCartItems, shipping} from './cart.js'
 
 function activateUpdateButton() {   // here only activate the update buttons, not click them. The click event only happen in the eventlistener when the update buttons are clicked.
   const updateButton = document.querySelectorAll(".cart-product-update-button");
@@ -106,18 +105,57 @@ function activateDeleteButton() {  // here is the function to activate the butto
   console.log(cart);
 }
 
-export function renderCheckoutPage() {
-  const shipping = [{
-    arrivalDate: dayjs().add(7, 'day').format('ddd, DD MMM YYYY'),
-    shippingPrice: 'FREE Shipping'
-    }, {
-      arrivalDate: dayjs().add(4, 'day').format('ddd, DD MMM YYYY'),
-      shippingPrice: '$4.99 - Shipping'
-    },{
-      arrivalDate: dayjs().add(1, 'day').format('ddd, DD MMM YYYY'),
-      shippingPrice: '$9.99 - Shipping'
-    }];
 
+function renderOrderSummary() { // to generate the order summary content part HTML.
+  const orderSummary = document.querySelector('.cart-summary-content');
+  const shippingSelection = document.querySelectorAll('input[type = "radio"]:checked');
+  let shippingPrice = ``;  // This is gonna be displaced in the shipping line of the OrderSummary content to show shipping price.
+  if(shippingSelection.length === 0) {
+    shippingPrice = '0.00';
+  }
+  else {
+    let shippingPriceCents = 0;
+    shippingSelection.forEach((item) => {
+      if(item.dataset.shippingPriceCents.slice(0, 4) === 'FREE') {
+        console.log('A free shipping is selected.');
+        shippingPriceCents += 0;
+      }
+      else {
+        shippingPriceCents += Number(item.dataset.shippingPriceCents.slice(1, 5)) * 100;
+      }
+    })
+    shippingPrice = String((shippingPriceCents / 100).toFixed(2));
+  }
+  const totalBeforeTax = String((Number(sumCartItems()[1]) + Number(shippingPrice)).toFixed(2)); //total with shipping without tax
+  const totalWithTax = String(((Number(sumCartItems()[1]) + Number(shippingPrice)) * 0.1).toFixed(2)); // tax
+  const totalPrice = String((Number(totalBeforeTax) + Number(totalWithTax)).toFixed(2)); // total with shipping and tax.
+  orderSummary.innerHTML = `
+    <p class="cart-summary-title">Order Summary</p>
+    <div class="cart-summary-item">
+      <p class="cart-summary-item-name">Items (${sumCartItems()[0]}):</p>
+      <p class="cart-summary-item-price">$${sumCartItems()[1]}</p>
+    </div>
+    <div class="cart-summary-item">
+      <p class="cart-summary-item-name">Shipping & handling:</p>
+      <p class="cart-summary-item-price">$${shippingPrice}</p>
+    </div>
+    <div class="cart-summary-item">
+      <p class="cart-summary-item-name">Total before tax:</p>
+      <p class="cart-summary-item-price">$${totalBeforeTax}</p>
+    </div>
+    <div class="cart-summary-item cart-summary-last-item">
+      <p class="cart-summary-item-name">Estimated tax (10%):</p>
+      <p class="cart-summary-item-price">$${totalWithTax}</p>
+    </div>
+    <div class="cart-summary-item cart-summary-total-item">
+      <p class="cart-summary-item-name">Order total:</p>
+      <p class="cart-summary-item-price">$${totalPrice}</p>
+    </div>
+    <button class="cart-place-order-button">Place your order</button>`;
+}
+
+
+export function renderCheckoutPage() {
   let cartItemsHTML = `<p class="checkout-prompt">Review your order</p>`;
   const cartItemsContent = document.querySelector('.cart-items-content');
   cart.forEach((item, index) => {
@@ -151,7 +189,7 @@ export function renderCheckoutPage() {
           <p class="cart-delivery-prompt">Choose a delivery option</p>
           
           <div class="cart-delivery-options-container">
-            <input class="cart-delivery-option-selector" name="a${item.productId}" value="${shipping[2].arrivalDate}" type="radio">
+            <input class="cart-delivery-option-selector" name="a${item.productId}" value="${shipping[2].arrivalDate}" data-shipping-price-cents="${shipping[2].shippingPrice}" type="radio">
             
             <div class="cart-deliver-arrival-date">
               <p class="cart-delivery-date">
@@ -165,7 +203,7 @@ export function renderCheckoutPage() {
           </div>
 
           <div class="cart-delivery-options-container">
-            <input class="cart-delivery-option-selector" name="a${item.productId}" value="${shipping[1].arrivalDate}" type="radio">
+            <input class="cart-delivery-option-selector" name="a${item.productId}" value="${shipping[1].arrivalDate}" data-shipping-price-cents="${shipping[1].shippingPrice}" type="radio">
             
             <div class="cart-deliver-arrival-date">
               <p class="cart-delivery-date">
@@ -179,7 +217,7 @@ export function renderCheckoutPage() {
           </div>
 
           <div class="cart-delivery-options-container">
-            <input class="cart-delivery-option-selector" name="a${item.productId}" value="${shipping[0].arrivalDate}" type="radio">
+            <input class="cart-delivery-option-selector" name="a${item.productId}" value="${shipping[0].arrivalDate}" data-shipping-price-cents="${shipping[0].shippingPrice}" type="radio">
             
             <div class="cart-deliver-arrival-date">
               <p class="cart-delivery-date">
@@ -198,41 +236,17 @@ export function renderCheckoutPage() {
   //console.log(cartItemsHTML);
   cartItemsContent.innerHTML = cartItemsHTML;
 
-  const orderSummary = document.querySelector('.cart-summary-content');
-  orderSummary.innerHTML = `
-  <p class="cart-summary-title">Order Summary</p>
-  <div class="cart-summary-item">
-    <p class="cart-summary-item-name">Items (8):</p>
-    <p class="cart-summary-item-price">$107.02</p>
-  </div>
-  <div class="cart-summary-item">
-    <p class="cart-summary-item-name">Shipping & handling:</p>
-    <p class="cart-summary-item-price">$4.99</p>
-  </div>
-  <div class="cart-summary-item">
-    <p class="cart-summary-item-name">Total before tax:</p>
-    <p class="cart-summary-item-price">$112.01</p>
-  </div>
-  <div class="cart-summary-item cart-summary-last-item">
-    <p class="cart-summary-item-name">Estimated tax (10%):</p>
-    <p class="cart-summary-item-price">$11.20</p>
-  </div>
-  <div class="cart-summary-item cart-summary-total-item">
-    <p class="cart-summary-item-name">Order total:</p>
-    <p class="cart-summary-item-price">$123.21</p>
-  </div>
-  <button class="cart-place-order-button">Place your order</button>`
 
-  function resetOrderSummarylist() {
+  renderOrderSummary();
 
-  }
-
+  
   const deliveryDateSelector = document.querySelectorAll('.cart-delivery-option-selector'); //here change the delivery date
   deliveryDateSelector.forEach((item, index) => {
     item.addEventListener('click', () => {
       const deliverydate = document.querySelector(`.${item.name}delivery-date`)
-      console.log(item.value);
       deliverydate.innerText = `Delivery date: ${item.value}`;
+
+      renderOrderSummary();
     })
   });
 
