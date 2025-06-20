@@ -11,6 +11,9 @@
   height: 55px;
   background-color: white;
 }
+.anchor-to-homepage:hover {
+  cursor: pointer;
+}
 .amazon-logo-checkout {
   width: 98px;
   height: 28px;
