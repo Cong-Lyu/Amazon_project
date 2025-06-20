@@ -13,28 +13,28 @@ export const products = [{
   productPriceCents : 2095,
   productImageName : 'intermediate-composite-basketball'
 },{
-  productId : 'sa2ewwqao',
+  productId : 'sa2ewwqao21w',
   productName : 'Adults Plain Cotton T-Shirt - 2 Pack',
   productRating : 45,
   productScore : 56,
   productPriceCents : 799,
   productImageName : 'adults-plain-cotton-tshirt-2-pack-teal'
 },{
-  productId : 'sadkiuao',
+  productId : 'sadkiuaosada',
   productName : '2 Slot Toaster - Black',
   productRating : 50,
   productScore : 2197,
   productPriceCents : 1899,
   productImageName : 'black-2-slot-toaster'
 },{
-  productId : 'sad447475o',
+  productId : 'sad447475o22',
   productName : '6 Piece White Dinner Plate Set',
   productRating : 40,
   productScore : 37,
   productPriceCents : 2067,
   productImageName : '6-piece-white-dinner-plate-set'
 },{
-  productId : 'sadqw2rerao',
+  productId : 'sadqw2reraod',
   productName : '6-Piece Nonstick, Carbon Steel Oven',
   productRating : 45,
   productScore : 175,
