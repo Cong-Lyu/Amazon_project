@@ -61,7 +61,15 @@
   height: 30px;
   border-radius: 24px;
   border: none;
-  background-color: rgb(242, 187, 37);
+  background-color: rgb(243, 216, 63);
+}
+.login-button:hover {
+  cursor: pointer;
+  background-color: rgb(255, 191, 0);
+}
+.login-button:active {
+  cursor: pointer;
+  background-color: orange;
 }
 .policy-text,.need-help-anchor {
   font-size: 12px;
