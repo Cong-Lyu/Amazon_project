@@ -1,5 +1,5 @@
 import {products} from './products.js';
-import {cart} from './cart.js';
+import {user} from './user.js';
 import dayjs from 'https://unpkg.com/dayjs@1.11.13/esm/index.js';
 
 function activateAddToCartButtons() {
@@ -8,12 +8,12 @@ function activateAddToCartButtons() {
 
   addToCartButtons.forEach((item) => {
     const productQuantitySelector = document.querySelector(`.${item.dataset.addToCartProductId.slice(0, 13)}product-quantity-selector`);
-    const productIndexInProducts = cart.findIndex((target) => {
+    const productIndexInProducts = user['cart'].findIndex((target) => {
       return target.productId === item.dataset.addToCartProductId.slice(1, 13);
     }) 
     item.addEventListener('click', () => {
       if(productIndexInProducts === -1) {
-        cart.push({
+        user['cart'].push({
           productId: item.dataset.addToCartProductId.slice(1, 13),
           productQuantity: Number(productQuantitySelector.value),
           productDropDate: dayjs().format('ddd, DD MMM YYYY')
@@ -21,7 +21,7 @@ function activateAddToCartButtons() {
         productAmount.innerText = String(Number(productAmount.innerText) + Number(productQuantitySelector.value));
       }
       else {
-        cart[productIndexInProducts].productQuantity += Number(productQuantitySelector.value);
+        user['cart'][productIndexInProducts].productQuantity += Number(productQuantitySelector.value);
         productAmount.innerText = String(Number(productAmount.innerText) + Number(productQuantitySelector.value));
       }
     })

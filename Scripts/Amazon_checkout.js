@@ -1,5 +1,5 @@
 import {products} from './products.js';
-import {cart, sumCartItems, shipping} from './cart.js'
+import {user, sumCartItems, shipping} from './user.js'
 
 function activateUpdateButton() {   // here only activate the update buttons, not click them. The click event only happen in the eventlistener when the update buttons are clicked.
   const updateButton = document.querySelectorAll(".cart-product-update-button");
@@ -28,14 +28,14 @@ function activateUpdateButton() {   // here only activate the update buttons, no
 }
 
 function activateSaveButton() { // here only activate the save buttons, not click them. The click event only happen in the eventlistener when the save buttons are clicked.
-  console.log(cart); // this helps to compare.
+  console.log(user['cart']); // this helps to compare.
   const saveButton = document.querySelectorAll('.cart-product-save-button');
   saveButton.forEach((item) => {
     const quantityContainer = document.querySelector(`.${item.dataset.saveProductId.slice(0, 13)}quantity-container`);
     item.addEventListener('click', () => { // here tells the save button what to do when it is clicked, but the code below will not be executed unless it is clicked, which means the code inside listener is set up only, ready to be clicked only.
       const quantityNumber = document.querySelector(`.${item.dataset.saveProductId.slice(0, 13)}quantity-number`);
       if(quantityNumber.value === 0) {  //when quantity-number is 0,
-        const deleteTargetIndex = cart.findIndex((target) => {   
+        const deleteTargetIndex = user['cart'].findIndex((target) => {   
           return target.productId === item.dataset.saveProductId.slice(1, 13);  //when quantity-number is 0, here use the product ID saved in the data attribute of the save buttons to find out which item in the cart should be removed, and then re-render the checkout page.
         })
         item.addEventListener('click', () => {
@@ -43,7 +43,7 @@ function activateSaveButton() { // here only activate the save buttons, not clic
             alert('Something is wrong about indexing!');
           }
           else {
-            cart.splice(deleteTargetIndex, 1);
+            user['cart'].splice(deleteTargetIndex, 1);
             renderCheckoutPage();
           }
         })
@@ -65,18 +65,18 @@ function activateSaveButton() { // here only activate the save buttons, not clic
           // item.dataset.updateProductId.slice(1, 13) means take out the product ID saved in the data- attribute and use it in generating the save button, to make it distinct from others.
         
 
-        const saveTargetIndex = cart.findIndex((target) => {   // here update the modified quantity to the item in the cart.
+        const saveTargetIndex = user['cart'].findIndex((target) => {   // here update the modified quantity to the item in the cart.
           return target.productId === item.dataset.saveProductId.slice(1, 13);  // here use the product ID saved in the data attribute of the delete buttons to find out which item in the cart should be removed, and then re-render the checkout page.
         })
         if(saveTargetIndex === -1) {
           alert('Something is wrong about indexing!');
         }
         else {
-          cart[saveTargetIndex].productQuantity = quantityNumber.value;
+          user['cart'][saveTargetIndex].productQuantity = quantityNumber.value;
           // renderCheckoutPage(); here do not need to re-render the whole checkout page because we have done it in this function.
         }
 
-        console.log(cart);  // this helps to see if the quantity of the item is modified in the cart.
+        console.log(user['cart']);  // this helps to see if the quantity of the item is modified in the cart.
 
         activateUpdateButton();  // here activate the save buttons on checkout page again after clicking the update button.
 
@@ -89,7 +89,7 @@ function activateSaveButton() { // here only activate the save buttons, not clic
 function activateDeleteButton() {  // here is the function to activate the buttons for removing the item from the cart
   const deleteButton = document.querySelectorAll('.cart-product-delete-button');  
   deleteButton.forEach((item) => {
-    const deleteTargetIndex = cart.findIndex((target) => {   
+    const deleteTargetIndex = user['cart'].findIndex((target) => {   
       return target.productId === item.dataset.deleteProductId.slice(1, 13);  // here use the product ID saved in the data attribute of the delete buttons to find out which item in the cart should be removed, and then re-render the checkout page.
     })
     item.addEventListener('click', () => {
@@ -97,12 +97,12 @@ function activateDeleteButton() {  // here is the function to activate the butto
         alert('Something is wrong about indexing!');
       }
       else {
-        cart.splice(deleteTargetIndex, 1);
+        user['cart'].splice(deleteTargetIndex, 1);
         renderCheckoutPage();
       }
     })
   })
-  console.log(cart);
+  console.log(user['cart']);
 }
 
 
@@ -158,7 +158,7 @@ function renderOrderSummary() { // to generate the order summary content part HT
 export function renderCheckoutPage() {
   let cartItemsHTML = `<p class="checkout-prompt">Review your order</p>`;
   const cartItemsContent = document.querySelector('.cart-items-content');
-  cart.forEach((item, index) => {
+  user['cart'].forEach((item, index) => {
     const targetProduct = products.find(target => target.productId === item.productId);
     cartItemsHTML += `
     <div class="cart-item-container">
