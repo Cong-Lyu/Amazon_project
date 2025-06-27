@@ -23,11 +23,14 @@
         <p class="email-title">
           Enter mobile number or email
         </p>
-        <input class="email-input" type="text" placeholder="E-mail">
-        <input class="password-input" type="text" placeholder="Password">
-        <button class="login-button">
-          Login in 
-        </button>
+        <div class="account-details-container">
+          <input class="email-input" type="text" placeholder="E-mail">
+          <input class="password-input" type="text" placeholder="Password">
+          <div class="warning-container"></div>
+          <button class="login-button">
+            Log in
+          </button>
+        </div>
         <p class="policy-text">
           By continuing, you agree to Amazon's Conditions of Use and Privacy Notice
         </p>
@@ -42,5 +45,10 @@
         </a>
       </div>
     </div>
+    
+    <script type="module">
+      import {renderLoginPage} from '../Scripts/Amazon_login.js';
+      renderLoginPage();
+    </script>
   </body>
 </html>
