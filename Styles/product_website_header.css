@@ -104,6 +104,7 @@
 }
 .return-and-orders-anchor:hover {
   border: 1px solid white;
+  cursor: pointer;
 }
 .cart-text,.product-number,.return-and-orders {
   display: inline-block;
@@ -130,6 +131,7 @@
 }
 .cart-anchor:hover {
   border: 1px solid white;
+  cursor: pointer;
 }
 .cart-icon {
   width: 44px;

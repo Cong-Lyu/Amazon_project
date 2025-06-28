@@ -156,9 +156,26 @@ function renderOrderSummary() { // to generate the order summary content part HT
 }
 
 
+async function renderLoginStatus() {
+  const loginStatusCode = await getLoginStatus();// every time we are redirected to this page, it will be renderred again, which means we will get the latest login status of the current user.
+  console.log(loginStatusCode);
+  const loginStatus = document.querySelector('.welcome-anchor');
+  if(loginStatusCode[0] === true) {
+    loginStatus.innerText = `Welcome! ${loginStatusCode[1]}`;
+  }
+  else {
+    alert('You have not logged in yet. Please log in first.');
+    window.location.href = '../Websites/Amazon_products.html';
+  }
+}
+
+
+
 export async function renderCheckoutPage() {
   const userInfo = await renderLoginStatus(); //render the loginStatus and get the userInfo for further searching for user's cart items saved in the backend.
   
+  // every time we are redirected to this page, it will be renderred again, which means we will get the latest login status of the current user.
+
   //in the future, the code below will be modified to render based on the userInfo above got from the backend.
 
   let cartItemsHTML = `<p class="checkout-prompt">Review your order</p>`;
@@ -259,15 +276,3 @@ export async function renderCheckoutPage() {
   activateDeleteButton();  // here activate the delete buttons on checkout page.
 }
 
-async function renderLoginStatus() {
-  const loginStatusCode = await getLoginStatus();
-  console.log(loginStatusCode);
-  const loginStatus = document.querySelector('.welcome-anchor');
-  if(loginStatusCode[0] === true) {
-    loginStatus.innerText = `Welcome! ${loginStatusCode[1]}`;
-  }
-  else {
-    alert('You have not logged in yet. Please log in first.');
-    window.location.href = '../Websites/Amazon_products.html';
-  }
-}

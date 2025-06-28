@@ -45,7 +45,7 @@
           </p>
         </a>
         
-        <a class="cart-anchor" href="./Amazon_checkout.html">
+        <a class="cart-anchor">
           <img class="cart-icon" src="../Images/icon-image/cart-icon.jpg">
           <p class="cart-text">
             Cart
@@ -62,7 +62,7 @@
     
     <script type="module">
       import {renderProductsContent} from '../Scripts/Amazon_products.js';
-      renderProductsContent();
+      renderProductsContent();// every time we are redirected to this page, it will be renderred again, which means we will get the latest login status of the current user.
     </script>
   </body>
 </html>

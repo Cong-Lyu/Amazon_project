@@ -28,28 +28,45 @@ function activateAddToCartButtons() {
   })
 }
 
+
+function activateCartAnchor(userInfo) {
+  const cartAnchor = document.querySelector('.cart-anchor');
+  cartAnchor.addEventListener('click', () => {
+    if(userInfo[0] === false) {
+      alert('Please log in first.');
+    }
+    else {
+      window.location.href = './Amazon_checkout.html';
+    }
+  })
+}
+
+
 async function renderLoginStatus() {
   const loginStatus = document.querySelector('.login-status-container');
   //const loginJudgment = document.querySelector('.sign-in-anchor');
-  const loginStatusCode = await getLoginStatus();
+  const loginStatusCode = await getLoginStatus(); // every time we are redirected to this page, it will be renderred again, which means we will get the latest login status of the current user.
   if(loginStatusCode[0] === true) {
     loginStatus.innerHTML =
       `<a class="sign-in-anchor" href="https://google.com">
         Welcome! ${loginStatusCode[1]}
       </a>`;;
+    return loginStatusCode;
   }
   else {
     loginStatus.innerHTML = 
       `<a class="sign-in-anchor" href="./Amazon_login.html">
         Hello! Sign in here
       </a>`;
+    return loginStatusCode;
   }
 }
 
 
 export async function renderProductsContent() {
   const userInfo = await renderLoginStatus();//render the loginStatus and get the userInfo for further saving the items the user picks from the home page to the backend.
-  
+  // every time we are redirected to this page, it will be renderred again, which means we will get the latest login status of the current user.
+
   //in the future, the code below will be modified to render based on the userInfo above.
 
   let productsContentHTML = ``;
@@ -95,5 +112,7 @@ export async function renderProductsContent() {
   productContent.innerHTML = productsContentHTML;
 
   activateAddToCartButtons();
+
+  activateCartAnchor(userInfo);
 }
 

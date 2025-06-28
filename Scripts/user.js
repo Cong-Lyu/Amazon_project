@@ -58,8 +58,8 @@ export async function getLoginStatus() {
   if(localStorage.getItem('amazonUsersHistory') === null){
     localStorage.setItem('amazonUsersHistory', JSON.stringify([]));
   }
-  const currentUserInfo = JSON.parse(localStorage.getItem('amazonCurrentUser'));
-  if(Object.keys(currentUserInfo).length === 0) {
+  const currentUserInfo = JSON.parse(localStorage.getItem('amazonCurrentUser')); //search for token from users' local storage.
+  if(Object.keys(currentUserInfo).length === 0) { //first time to use Amazon or never log in before.
     console.log('There is nothing in the Amazon current User attribute.');
     return [false, undefined];
   }
@@ -72,7 +72,7 @@ export async function getLoginStatus() {
     if(varificationCode === true){
       return [true, currentUserInfo.userName];
     }
-    else {
+    else {   //the token has expired.
       return [false, undefined];
     }
   }
