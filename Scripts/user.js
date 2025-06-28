@@ -68,7 +68,7 @@ export async function getLoginStatus() {
       method: 'GET',
     })
     const varificationCode = await varification.json();
-    console.log(varificationCode);
+    //console.log(varificationCode); to check the response type.
     if(varificationCode === true){
       return [true, currentUserInfo.userName];
     }

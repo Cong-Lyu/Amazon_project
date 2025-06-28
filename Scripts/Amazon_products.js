@@ -28,7 +28,7 @@ function activateAddToCartButtons() {
   })
 }
 
-export async function renderLoginPage() {
+async function renderLoginStatus() {
   const loginStatus = document.querySelector('.login-status-container');
   //const loginJudgment = document.querySelector('.sign-in-anchor');
   const loginStatusCode = await getLoginStatus();
@@ -47,7 +47,11 @@ export async function renderLoginPage() {
 }
 
 
-export function renderProductsContent() {
+export async function renderProductsContent() {
+  const userInfo = await renderLoginStatus();//render the loginStatus and get the userInfo for further saving the items the user picks from the home page to the backend.
+  
+  //in the future, the code below will be modified to render based on the userInfo above.
+
   let productsContentHTML = ``;
   const productContent = document.querySelector('.products-content');
   products.forEach((item, index) => {

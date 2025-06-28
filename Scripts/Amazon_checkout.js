@@ -1,5 +1,6 @@
 import {products} from './products.js';
-import {user, sumCartItems, shipping} from './user.js'
+import {getLoginStatus, user, sumCartItems, shipping} from './user.js'
+
 
 function activateUpdateButton() {   // here only activate the update buttons, not click them. The click event only happen in the eventlistener when the update buttons are clicked.
   const updateButton = document.querySelectorAll(".cart-product-update-button");
@@ -155,7 +156,11 @@ function renderOrderSummary() { // to generate the order summary content part HT
 }
 
 
-export function renderCheckoutPage() {
+export async function renderCheckoutPage() {
+  const userInfo = await renderLoginStatus(); //render the loginStatus and get the userInfo for further searching for user's cart items saved in the backend.
+  
+  //in the future, the code below will be modified to render based on the userInfo above got from the backend.
+
   let cartItemsHTML = `<p class="checkout-prompt">Review your order</p>`;
   const cartItemsContent = document.querySelector('.cart-items-content');
   user['cart'].forEach((item, index) => {
@@ -252,4 +257,17 @@ export function renderCheckoutPage() {
 
   activateUpdateButton();  // here activate the update buttons on checkout page.
   activateDeleteButton();  // here activate the delete buttons on checkout page.
+}
+
+async function renderLoginStatus() {
+  const loginStatusCode = await getLoginStatus();
+  console.log(loginStatusCode);
+  const loginStatus = document.querySelector('.welcome-anchor');
+  if(loginStatusCode[0] === true) {
+    loginStatus.innerText = `Welcome! ${loginStatusCode[1]}`;
+  }
+  else {
+    alert('You have not logged in yet. Please log in first.');
+    window.location.href = '../Websites/Amazon_products.html';
+  }
 }

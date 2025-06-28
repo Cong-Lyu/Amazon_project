@@ -40,13 +40,14 @@
   align-items: center;
 }
 .welcome-anchor {
+  color: black;
   border: 1px solid white;
-  width: 80px;
+  width: 140px;
   text-decoration: none;
   font-family: Arial;
   font-size: 14px;
   margin-right: 10px;
-  padding: 10px 10px;
+  padding: 5px 5px;
 }
 .welcome-anchor:hover {
   border: 1px solid rgb(14, 14, 14);
