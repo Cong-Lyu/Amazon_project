@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>
+      Amazon Login Page
+    </title>
+    <link rel="stylesheet" href="../Styles/login_website.css">
+  </head>
+  <body>
+    <div class="login-container">
+      <div class="logo-container">
+        <a class="amazon-products-page-anchor" href="./Amazon_products.html">
+          <img class="amazon-logo" src="../Images/icon-image/amazon-logo-checkout.jpg">
+          <p class="area-title">
+            .com.au
+          </p>
+        </a>
+      </div>
+      <div class="sign-in-container">
+        <p class="sign-in-title">
+          Sign in or create account
+        </p>
+        <p class="email-title">
+          Enter mobile number or email
+        </p>
+        <div class="account-details-container">
+          <input class="email-input" type="text" placeholder="E-mail">
+          <input class="password-input" type="text" placeholder="Password">
+          <div class="warning-container"></div>
+          <button class="login-button">
+            Log in
+          </button>
+        </div>
+        <p class="policy-text">
+          By continuing, you agree to Amazon's Conditions of Use and Privacy Notice
+        </p>
+        <a class="need-help-anchor">
+          Need Help?
+        </a>
+        <p class="sign-up-text">
+          Do not have an account? 
+        </p>
+        <a class="sign-up-anchor">
+          Sign up here!
+        </a>
+      </div>
+    </div>
+    
+    <script type="module">
+      import {renderLoginPage} from '../Scripts/Amazon_login.js';
+      renderLoginPage();
+    </script>
+  </body>
+</html>

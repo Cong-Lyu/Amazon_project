@@ -29,6 +29,13 @@
       </div>
     
       <div class="right-section">
+        <div class="login-status-container">
+          <a class="sign-in-anchor" href="./Amazon_login.html">
+            Hello! Sign in here
+          </a>
+        </div>
+        
+
         <a class="return-and-orders-anchor" href="https://google.com" target="_blank">
           <p class="return-text">
             Returns 
@@ -38,7 +45,7 @@
           </p>
         </a>
         
-        <a class="cart-anchor" href="./Amazon_checkout.html">
+        <a class="cart-anchor">
           <img class="cart-icon" src="../Images/icon-image/cart-icon.jpg">
           <p class="cart-text">
             Cart
@@ -53,6 +60,9 @@
     <div class="products-content">
     </div>
     
-    <script src="../Scripts/Amazon_products.js" type="module"></script>
+    <script type="module">
+      import {renderProductsContent} from '../Scripts/Amazon_products.js';
+      renderProductsContent();// every time we are redirected to this page, it will be renderred again, which means we will get the latest login status of the current user.
+    </script>
   </body>
 </html>

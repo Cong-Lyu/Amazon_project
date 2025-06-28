@@ -35,6 +35,24 @@
 .items-anchor:hover {
   cursor: pointer;
 }
+.right-section {
+  display: flex;
+  align-items: center;
+}
+.welcome-anchor {
+  color: black;
+  border: 1px solid white;
+  width: 140px;
+  text-decoration: none;
+  font-family: Arial;
+  font-size: 14px;
+  margin-right: 10px;
+  padding: 5px 5px;
+}
+.welcome-anchor:hover {
+  border: 1px solid rgb(14, 14, 14);
+  cursor: pointer;
+}
 .ckeckoutPage-lock-icon {
   height: 19px;
   width: 19px;

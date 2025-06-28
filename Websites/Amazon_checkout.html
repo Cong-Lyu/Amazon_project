@@ -18,7 +18,13 @@
       <p class="checkout-header-title">
         Checkout (<a class="items-anchor" href="./Amazon_products.html">8 items</a>)
       </p>
-      <img class="ckeckoutPage-lock-icon" src="../Images/icon-image/checkout-lock-icon.jpg">
+      <div class="right-section">
+        <a class="welcome-anchor" href="https://google.com">
+          Welcome!
+        </a>
+        <img class="ckeckoutPage-lock-icon" src="../Images/icon-image/checkout-lock-icon.jpg">
+      </div>
+      
     </div>
 
     <div class="ckeckout-content">
@@ -32,9 +38,7 @@
     </div>
     <script type="module">
       import {renderCheckoutPage} from '../Scripts/Amazon_checkout.js';
-
-      renderCheckoutPage();
-
+      renderCheckoutPage();// every time we are redirected to this page, it will be renderred again, which means we will get the latest login status of the current user.
     </script>
   </body>
 </html>
