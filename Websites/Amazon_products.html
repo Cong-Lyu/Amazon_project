@@ -29,9 +29,12 @@
       </div>
     
       <div class="right-section">
-        <a class="sign-in-anchor" href="./Amazon_login.html">
-          Hello! Sign in here
-        </a>
+        <div class="login-status-container">
+          <a class="sign-in-anchor" href="./Amazon_login.html">
+            Hello! Sign in here
+          </a>
+        </div>
+        
 
         <a class="return-and-orders-anchor" href="https://google.com" target="_blank">
           <p class="return-text">
@@ -58,8 +61,8 @@
     </div>
     
     <script type="module">
-      import {renderProductsContent} from '../Scripts/Amazon_products.js';
-
+      import {renderLoginPage, renderProductsContent} from '../Scripts/Amazon_products.js';
+      renderLoginPage();
       renderProductsContent();
     </script>
   </body>

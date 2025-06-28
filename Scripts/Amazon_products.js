@@ -1,5 +1,5 @@
 import {products} from './products.js';
-import {user} from './user.js';
+import {getLoginStatus, user} from './user.js';
 import dayjs from 'https://unpkg.com/dayjs@1.11.13/esm/index.js';
 
 function activateAddToCartButtons() {
@@ -27,6 +27,25 @@ function activateAddToCartButtons() {
     })
   })
 }
+
+export async function renderLoginPage() {
+  const loginStatus = document.querySelector('.login-status-container');
+  //const loginJudgment = document.querySelector('.sign-in-anchor');
+  const loginStatusCode = await getLoginStatus();
+  if(loginStatusCode[0] === true) {
+    loginStatus.innerHTML =
+      `<a class="sign-in-anchor" href="https://google.com">
+        Welcome! ${loginStatusCode[1]}
+      </a>`;;
+  }
+  else {
+    loginStatus.innerHTML = 
+      `<a class="sign-in-anchor" href="./Amazon_login.html">
+        Hello! Sign in here
+      </a>`;
+  }
+}
+
 
 export function renderProductsContent() {
   let productsContentHTML = ``;

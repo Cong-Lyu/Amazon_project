@@ -1,4 +1,5 @@
-import {user} from './user.js';
+import {findUserIndex, user} from './user.js';
+import dayjs from 'https://unpkg.com/dayjs@1.11.13/esm/index.js';
 
 async function loginAttempt(email, password) {
   const accountContainer = document.querySelector('.account-details-container');
@@ -21,11 +22,29 @@ async function loginAttempt(email, password) {
     }
   })
   .then(result => {
-    user['token'] = result['user-token'];
+    //below to update the currentUserInfo in the localStorage when the login move succeeds.
+    const currentUser = {
+      'userName': email,
+      'userToken': result['user-token'],
+      'lastLoginTimeStamp': String(dayjs().valueOf())
+    }
+    localStorage.setItem('amazonCurrentUser', JSON.stringify(currentUser));
+    
+    //below is to check if this account is saved in local history.
+    const tryfindUserInLocal = findUserIndex(email);
+    const userLoginHistory = JSON.parse(localStorage.getItem('amazonUsersHistory')); //get the account history list
+    if(tryfindUserInLocal === -1) {
+      userLoginHistory.push(currentUser);
+      console.log(userLoginHistory);
+    }
+    else {
+      console.log(userLoginHistory);
+    }
+    
+    //below is to go back to the Amazon products home page.
+    window.location.href = "./Amazon_products.html";
   })
-  .catch(err => console.log(err))
-
-  if(user['token'] === undefined) {
+  .catch(err => {
     accountContainer.innerHTML = `
       <input class="email-password-wrong-style email-re-input" type="text" placeholder="E-mail">
       <input class="email-password-wrong-style password-re-input" type="text" placeholder="Password">
@@ -42,10 +61,7 @@ async function loginAttempt(email, password) {
       const passwordReInput = document.querySelector('.password-re-input').value;
       loginAttempt(emailReInput, passwordReInput);
     })
-  }
-  else {
-    window.location.href = "./Amazon_products.html";
-  }
+  })
 }
 
 export function renderLoginPage() {

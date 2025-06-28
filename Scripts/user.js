@@ -1,5 +1,39 @@
 import {products} from './products.js'
 import dayjs from 'https://unpkg.com/dayjs@1.11.13/esm/index.js';
+const userTokenVarifyUrl = 'https://supplekick-us.backendless.app/api/users/isvalidusertoken';
+const accnountSample = {
+  'amazonCurrentUser': {
+    'userName': '',
+    'userToken': '',
+    'lastLoginTimeStamp': ''
+  },
+  'amazonUsersHistory': [
+    {
+    'userName': '',
+    'userToken': '',
+    'lastLoginTimeStamp': ''
+    },
+    {
+    'userName': '',
+    'userToken': '',
+    'lastLoginTimeStamp': ''
+    }
+  ]
+}
+
+export function findUserIndex(userName) {
+  const userLoginHistory = JSON.parse(localStorage.getItem('amazonUsersHistory'));
+  const index = 0;
+  for(const user of userLoginHistory) {
+    if(user.userName === userName) {
+      return index;
+    }
+    else {
+      index ++;
+    }
+  }
+  return -1;
+}
 
 export let user = {
   'userName': '',
@@ -17,6 +51,32 @@ export let user = {
 }
 
 
+export async function getLoginStatus() {
+  if(localStorage.getItem('amazonCurrentUser') === null) {
+    localStorage.setItem('amazonCurrentUser', JSON.stringify({}));
+  }
+  if(localStorage.getItem('amazonUsersHistory') === null){
+    localStorage.setItem('amazonUsersHistory', JSON.stringify([]));
+  }
+  const currentUserInfo = JSON.parse(localStorage.getItem('amazonCurrentUser'));
+  if(Object.keys(currentUserInfo).length === 0) {
+    console.log('There is nothing in the Amazon current User attribute.');
+    return [false, undefined];
+  }
+  else{
+    const varification = await fetch(`${userTokenVarifyUrl}/${currentUserInfo.userToken}`, {
+      method: 'GET',
+    })
+    const varificationCode = await varification.json();
+    console.log(varificationCode);
+    if(varificationCode === true){
+      return [true, currentUserInfo.userName];
+    }
+    else {
+      return [false, undefined];
+    }
+  }
+}
 
 
 export const shipping = [{

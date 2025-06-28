@@ -74,27 +74,26 @@
 
   object-fit: contain;
 }
-
-
 .right-section {
   display: flex;
   flex: row;
   justify-content: center;
   align-items: center;
 }
-.sign-in-anchor {
-  border: 1px solid transparent;
+.login-status-container {
   width: 80px;
+  border: 1px solid transparent;
+  padding: 5px 5px;
+}
+.login-status-container:hover {
+  border: 1px solid white;
+  cursor: pointer;
+}
+.sign-in-anchor {
   text-decoration: none;
   color: white;
   font-family: Arial;
   font-size: 14px;
-  margin-right: 10px;
-  padding: 5px 5px;
-}
-.sign-in-anchor:hover {
-  border: 1px solid white;
-  cursor: pointer;
 }
 .return-and-orders-anchor {
   width: 60px;
