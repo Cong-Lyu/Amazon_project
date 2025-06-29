@@ -26,7 +26,8 @@ async function loginAttempt(email, password) {
     const currentUser = {
       'userName': email,
       'userToken': result['user-token'],
-      'lastLoginTimeStamp': String(dayjs().valueOf())
+      'lastLoginTimeStamp': String(dayjs().valueOf()),
+      'userId': result['objectId'] // user unique identifier
     }
     localStorage.setItem('amazonCurrentUser', JSON.stringify(currentUser));
     

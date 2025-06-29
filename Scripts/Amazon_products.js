@@ -1,33 +1,54 @@
 import {getProducts} from './products.js';
-import {getLoginStatus, user} from './user.js';
-import dayjs from 'https://unpkg.com/dayjs@1.11.13/esm/index.js';
+import {getLoginStatus, user, findProductInCartTable, postProductToCart} from './user.js';
 
 const productsTableUrl = 'https://api.backendless.com/059E0E6C-3A70-434F-B0EE-230A6650EEAE/3AB37559-1318-4AAE-8B26-856956A63050/data/products';
 
-function activateAddToCartButtons() {
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+async function activateAddToCartButtons() {  //userInfo here keeps the login Info including userName, userToken, userObjectId.
   const productAmount = document.querySelector('.product-number');
   const addToCartButtons = document.querySelectorAll('.Add-to-Cart');
-
-  addToCartButtons.forEach((item) => {
-    const productQuantitySelector = document.querySelector(`.${item.dataset.addToCartProductId.slice(0, 13)}product-quantity-selector`);
-    const productIndexInProducts = user['cart'].findIndex((target) => {
-      return target.objectId === item.dataset.addToCartProductId.slice(1, 13);
-    }) 
-    item.addEventListener('click', () => {
-      if(productIndexInProducts === -1) {
-        user['cart'].push({
-          productId: item.dataset.addToCartProductId.slice(1, 13),
-          productQuantity: Number(productQuantitySelector.value),
-          productDropDate: dayjs().format('ddd, DD MMM YYYY')
-        })
-        productAmount.innerText = String(Number(productAmount.innerText) + Number(productQuantitySelector.value));
+  for(const item of addToCartButtons){
+    const productObjectId = item.dataset.addToCartProductId.slice(1, 37); // get the product object Id out for later use.
+    const productQuantitySelector = document.querySelector(`.a${productObjectId}product-quantity-selector`);
+    item.addEventListener('click', async () => {
+      const loginStatus = await getLoginStatus(); // to check if the login info is still valid. This should only check when the button is clicked!!! This should be done before any other step below as token is required below.
+    
+      if(loginStatus[0] === true) { //token is valid.
+        const userInfo = loginStatus[1];
+        const isProductAlreadyInCart = await findProductInCartTable(userInfo['userId'], productObjectId, userInfo['userToken']); //try to find out if the product is already in the cart. If so, it returns a list where contains the record object.
+        console.log(isProductAlreadyInCart);
+        if(isProductAlreadyInCart.length >= 2) {
+          alert('Disasterous error happens!!! Check backend now, there are two or more records match the conditions');
+        }
+        else if(isProductAlreadyInCart.length === 0) {
+          // ------- below is to form a new object and add it into the cart table in the backend------
+          const productObject = {
+            'userObjectId': userInfo['userId'],
+            'productObjectId': productObjectId,
+            'productQuantity': Number(productQuantitySelector.value),
+          }
+          await postProductToCart('POST', productObject, userInfo['userToken']);
+          alert('This item has been put into your cart!');
+          productAmount.innerText = String(Number(productAmount.innerText) + Number(productQuantitySelector.value));
+        }
+        else {
+          // ------- below is to change the quantity of the existing object and update the according record in the cart table in the backend------
+          
+          //await sleep(4000);// This is to test if the number I got before in the console.log(isProductAlreadyInCart); from the cart table is the number that has not been changed.
+          isProductAlreadyInCart[0]['productQuantity'] += Number(productQuantitySelector.value);//the updated quantity should be the former quantity plus the new quantity the user selected here.
+          await postProductToCart('PUT', isProductAlreadyInCart[0], userInfo['userToken']);
+          alert('This item in your cart has been updated!');
+          productAmount.innerText = String(Number(productAmount.innerText) + Number(productQuantitySelector.value));
+        }
       }
-      else {
-        user['cart'][productIndexInProducts].productQuantity += Number(productQuantitySelector.value);
-        productAmount.innerText = String(Number(productAmount.innerText) + Number(productQuantitySelector.value));
+      else {//user has not logged in yet or the token has expired.
+        alert('Please log in first!');
       }
     })
-  })
+  }
 }
 
 
@@ -51,9 +72,9 @@ async function renderLoginStatus() {
   if(loginStatusCode[0] === true) {
     loginStatus.innerHTML =
       `<a class="sign-in-anchor" href="https://google.com">
-        Welcome! ${loginStatusCode[1]}
+        Welcome! ${loginStatusCode[1]['userName']}
       </a>`;;
-    return loginStatusCode;
+    return loginStatusCode[1];
   }
   else {
     console.log('The token expired! -- from Amazon_products.js');
@@ -61,7 +82,7 @@ async function renderLoginStatus() {
       `<a class="sign-in-anchor" href="./Amazon_login.html">
         Hello! Sign in here
       </a>`;
-    return loginStatusCode;
+    return loginStatusCode[1];
   }
 }
 
@@ -70,7 +91,7 @@ export async function renderProductsContent() {
   const userInfo = await renderLoginStatus();//render the loginStatus and get the userInfo for further saving the items the user picks from the home page to the backend.
   // every time we are redirected to this page, it will be renderred again, which means we will get the latest login status of the current user.
 
-  //in the future, the code below will be modified to render based on the userInfo above.
+  //in the future, the code below may be modified to render based on the userInfo above.
   const products = await getProducts(productsTableUrl);
   console.log(products);
   let productsContentHTML = ``;

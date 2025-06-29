@@ -1,6 +1,9 @@
 import {products} from './products.js'
 import dayjs from 'https://unpkg.com/dayjs@1.11.13/esm/index.js';
 const userTokenVarifyUrl = 'https://supplekick-us.backendless.app/api/users/isvalidusertoken';
+
+let cartUrl = 'https://api.backendless.com/059E0E6C-3A70-434F-B0EE-230A6650EEAE/3AB37559-1318-4AAE-8B26-856956A63050/data/cart'; //we should put the Id of that specific record which match the conditions we set before in the findProductInCartTable() at the end of this URL if we wanna update.
+
 const accnountSample = {
   'amazonCurrentUser': {
     'userName': '',
@@ -20,6 +23,40 @@ const accnountSample = {
     }
   ]
 }
+
+export async function findProductInCartTable(userId, productId, userToken) {
+  const condition = encodeURIComponent(`userObjectId = '${userId}' AND productObjectId = '${productId}'`);
+  const response = await fetch(`${cartUrl}?where=${condition}`, {
+    method: 'GET',
+    headers: {
+      'user-token': userToken
+    }
+  });
+  const result = await response.json(); //if there is no matching, it returns an empty list [].
+  return result;
+}
+
+export async function postProductToCart(fetchMethod, productObject, userToken) {
+  let updateUrl;
+  if(fetchMethod === 'POST') {
+    updateUrl = cartUrl;
+  }
+  else if(fetchMethod === 'PUT') {
+    updateUrl = `${cartUrl}/${productObject.objectId}`;
+  }
+  else {
+    return 'Something wrong with the input fetch method!!!';
+  }
+  const response = await fetch(updateUrl, {
+    method: fetchMethod,
+    headers: {
+      'user-token': userToken
+    },
+    body: JSON.stringify(productObject)
+  });
+  const result = await response.json(); //if there is no matching, it returns an empty list [].
+}
+
 
 export function findUserIndex(userName) {
   const userLoginHistory = JSON.parse(localStorage.getItem('amazonUsersHistory'));
@@ -85,7 +122,7 @@ export async function getLoginStatus() {
     const varificationCode = await varification.json();
     //console.log(varificationCode); to check the response type.
     if(varificationCode === true){
-      return [true, currentUserInfo.userName, currentUserInfo.userToken];
+      return [true, currentUserInfo];
     }
     else {   //the token has expired.
       console.log('The token expired! -- from user.js');
