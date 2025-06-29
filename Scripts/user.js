@@ -50,6 +50,21 @@ export let user = {
   'token': undefined
 }
 
+export async function loginWithoutLocal(loginUrl, email, password) {
+  const response = await fetch(loginUrl, {
+    method: 'POST',
+    headers: {
+      'Content-type': 'application/json'
+    },
+    body: JSON.stringify({
+      'login': email,
+      'password': password
+    })
+  })
+  const result = response.json();
+  return result;
+}
+
 
 export async function getLoginStatus() {
   if(localStorage.getItem('amazonCurrentUser') === null) {
@@ -70,9 +85,10 @@ export async function getLoginStatus() {
     const varificationCode = await varification.json();
     //console.log(varificationCode); to check the response type.
     if(varificationCode === true){
-      return [true, currentUserInfo.userName];
+      return [true, currentUserInfo.userName, currentUserInfo.userToken];
     }
     else {   //the token has expired.
+      console.log('The token expired! -- from user.js');
       return [false, undefined];
     }
   }
