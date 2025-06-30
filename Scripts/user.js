@@ -8,7 +8,8 @@ const accnountSample = {
   'amazonCurrentUser': {
     'userName': '',
     'userToken': '',
-    'lastLoginTimeStamp': ''
+    'lastLoginTimeStamp': '',
+    'userId': '' //user's unique objectId.
   },
   'amazonUsersHistory': [
     {
@@ -24,8 +25,14 @@ const accnountSample = {
   ]
 }
 
-export async function findProductInCartTable(userId, productId, userToken) {
-  const condition = encodeURIComponent(`userObjectId = '${userId}' AND productObjectId = '${productId}'`);
+export async function findProductInCartTable(conditionType, userId, productId, userToken) {
+  let condition;
+  if(conditionType === 0){
+    condition = encodeURIComponent(`userObjectId = '${userId}' AND productObjectId = '${productId}'`);
+  }
+  else {
+    condition = encodeURIComponent(`userObjectId = '${userId}'`);
+  }
   const response = await fetch(`${cartUrl}?where=${condition}`, {
     method: 'GET',
     headers: {
@@ -56,7 +63,6 @@ export async function postProductToCart(fetchMethod, productObject, userToken) {
   });
   const result = await response.json(); //if there is no matching, it returns an empty list [].
 }
-
 
 export function findUserIndex(userName) {
   const userLoginHistory = JSON.parse(localStorage.getItem('amazonUsersHistory'));
@@ -130,7 +136,6 @@ export async function getLoginStatus() {
     }
   }
 }
-
 
 export const shipping = [{
   arrivalDate: dayjs().add(7, 'day').format('ddd, DD MMM YYYY'),
