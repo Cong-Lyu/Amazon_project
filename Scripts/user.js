@@ -43,13 +43,13 @@ export async function findProductInCartTable(conditionType, userId, productId, u
   return result;
 }
 
-export async function postProductToCart(fetchMethod, productObject, userToken) {
+export async function postProductToCart(fetchMethod, recordObject, userToken) {
   let updateUrl;
   if(fetchMethod === 'POST') {
     updateUrl = cartUrl;
   }
   else if(fetchMethod === 'PUT') {
-    updateUrl = `${cartUrl}/${productObject.objectId}`;
+    updateUrl = `${cartUrl}/${recordObject.objectId}`;
   }
   else {
     return 'Something wrong with the input fetch method!!!';
@@ -59,9 +59,10 @@ export async function postProductToCart(fetchMethod, productObject, userToken) {
     headers: {
       'user-token': userToken
     },
-    body: JSON.stringify(productObject)
+    body: JSON.stringify(recordObject)
   });
   const result = await response.json(); //if there is no matching, it returns an empty list [].
+  console.log(result);
 }
 
 export function findUserIndex(userName) {

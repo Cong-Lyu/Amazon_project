@@ -7,7 +7,8 @@ function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-async function postToCartButton(methodType, productQuantity, userInfo, productObjectId, isProductAlreadyInCart) {
+export async function postToCartButton(methodType, productQuantity, userInfo, productObjectId, isProductAlreadyInCart) {
+  //!!!!This function is for home page 'add-to-cart' buttons only!!!
   const productAmount = document.querySelector('.product-number');
   if(methodType === 0) { //POST
     const productObject = {
@@ -17,15 +18,16 @@ async function postToCartButton(methodType, productQuantity, userInfo, productOb
     }
     await postProductToCart('POST', productObject, userInfo['userToken']);
     alert('This item has been put into your cart!');
+    productAmount.innerText = String(Number(productAmount.innerText) + Number(productQuantity));
   }
   else{  //PUT
     //await sleep(4000);// This is to test if the number I got before in the console.log(isProductAlreadyInCart); from the cart table is the number that has not been changed.
     isProductAlreadyInCart[0]['productQuantity'] += Number(productQuantity);//the updated quantity should be the former quantity plus the new quantity the user selected here.
     await postProductToCart('PUT', isProductAlreadyInCart[0], userInfo['userToken']);
     alert('This item in your cart has been updated!');
-    
+    productAmount.innerText = String(Number(productAmount.innerText) + Number(productQuantity));
   }
-  productAmount.innerText = String(Number(productAmount.innerText) + Number(productQuantity));
+  
 }
 
 
