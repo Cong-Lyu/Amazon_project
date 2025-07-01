@@ -1,6 +1,8 @@
-import {products} from './products.js'
+import {getProducts} from './products.js'
 import dayjs from 'https://unpkg.com/dayjs@1.11.13/esm/index.js';
 const userTokenVarifyUrl = 'https://supplekick-us.backendless.app/api/users/isvalidusertoken';
+
+const productsUrl = 'https://api.backendless.com/059E0E6C-3A70-434F-B0EE-230A6650EEAE/3AB37559-1318-4AAE-8B26-856956A63050/data/products';
 
 let cartUrl = 'https://api.backendless.com/059E0E6C-3A70-434F-B0EE-230A6650EEAE/3AB37559-1318-4AAE-8B26-856956A63050/data/cart'; //we should put the Id of that specific record which match the conditions we set before in the findProductInCartTable() at the end of this URL if we wanna update.
 
@@ -159,21 +161,15 @@ export let cart = [{
   productDropDate: '2025-06-15'
 }];
 
-export function sumCartItems() {
+export async function sumCartItems(userInfo, itemList) {
   let sumQuantity = 0;
   let sumPriceCents = 0;
-  cart.forEach((item) => {
+  const products = await getProducts(userInfo);
+  for(const item of itemList) {
     sumQuantity += item.productQuantity;
-    const productIndexInProducts = products.findIndex((target) => {
-      return target.productId === item.productId;
-    })
-    if(productIndexInProducts === -1) {
-      alert("There something wrong in the cart items'productId!")
-    }
-    else {
-      sumPriceCents += products[productIndexInProducts].productPriceCents * item.productQuantity;
-    }
-  })
+    const indexInProducts = products.findIndex(target => target.objectId === item.productObjectId);
+    sumPriceCents += products[indexInProducts].productPriceCents * item.productQuantity;
+  }
   const sumPrice = String((sumPriceCents / 100).toFixed(2));
   return [sumQuantity, sumPrice];
 }

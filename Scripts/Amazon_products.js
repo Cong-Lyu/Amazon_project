@@ -1,5 +1,5 @@
 import {getProducts} from './products.js';
-import {getLoginStatus, user, findProductInCartTable, postProductToCart} from './user.js';
+import {getLoginStatus, findProductInCartTable, postProductToCart} from './user.js';
 
 const productsTableUrl = 'https://api.backendless.com/059E0E6C-3A70-434F-B0EE-230A6650EEAE/3AB37559-1318-4AAE-8B26-856956A63050/data/products';
 
@@ -108,7 +108,7 @@ export async function renderProductsContent() {
   // every time we are redirected to this page, it will be renderred again, which means we will get the latest login status of the current user.
 
   //in the future, the code below may be modified to render based on the userInfo above.
-  const products = await getProducts(productsTableUrl);
+  const products = await getProducts(userInfo);
   let productsContentHTML = ``;
   const productContent = document.querySelector('.products-content');
   products.forEach((item) => {

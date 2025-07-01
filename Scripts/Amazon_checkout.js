@@ -118,8 +118,7 @@ function activateDeleteButton() {  // here is the function to activate the butto
   }
 }
 
-
-async function renderOrderSummary() { // to generate the order summary content part HTML.
+async function renderOrderSummary(userInfo, itemList) { // to generate the order summary content part HTML.
   const orderSummary = document.querySelector('.cart-summary-content');
   const shippingSelection = document.querySelectorAll('input[type = "radio"]:checked');
   let shippingPrice = ``;  // This is gonna be displaced in the shipping line of the OrderSummary content to show shipping price.
@@ -139,14 +138,17 @@ async function renderOrderSummary() { // to generate the order summary content p
     })
     shippingPrice = String((shippingPriceCents / 100).toFixed(2));
   }
-  const totalBeforeTax = String((Number(sumCartItems()[1]) + Number(shippingPrice)).toFixed(2)); //total with shipping without tax
-  const totalWithTax = String(((Number(sumCartItems()[1]) + Number(shippingPrice)) * 0.1).toFixed(2)); // tax
-  const totalPrice = String((Number(totalBeforeTax) + Number(totalWithTax)).toFixed(2)); // total with shipping and tax.
+  const total = await sumCartItems(userInfo, itemList);  //total[0] for total quantity; total[1] for totalPrice 
+  const priceNumber = Number(total[1]) + Number(shippingPrice);  //total[1] + shippingTotal
+  const totalBeforeTax = String(priceNumber.toFixed(2));
+  const totalTax = String((priceNumber * 0.1).toFixed(2));
+
+  const totalPrice = String((Number(totalBeforeTax) + Number(totalTax)).toFixed(2)); // total with shipping and tax.
   orderSummary.innerHTML = `
     <p class="cart-summary-title">Order Summary</p>
     <div class="cart-summary-item">
-      <p class="cart-summary-item-name">Items (${sumCartItems()[0]}):</p>
-      <p class="cart-summary-item-price">$${sumCartItems()[1]}</p>
+      <p class="cart-summary-item-name">Items (${total[0]}):</p>
+      <p class="cart-summary-item-price">$${total[1]}</p>
     </div>
     <div class="cart-summary-item">
       <p class="cart-summary-item-name">Shipping & handling:</p>
@@ -158,7 +160,7 @@ async function renderOrderSummary() { // to generate the order summary content p
     </div>
     <div class="cart-summary-item cart-summary-last-item">
       <p class="cart-summary-item-name">Estimated tax (10%):</p>
-      <p class="cart-summary-item-price">$${totalWithTax}</p>
+      <p class="cart-summary-item-price">$${totalTax}</p>
     </div>
     <div class="cart-summary-item cart-summary-total-item">
       <p class="cart-summary-item-name">Order total:</p>
@@ -167,23 +169,21 @@ async function renderOrderSummary() { // to generate the order summary content p
     <button class="cart-place-order-button">Place your order</button>`;
 }
 
-
 async function renderLoginStatus() {
   const loginStatusCode = await getLoginStatus();// every time we are redirected to this page, it will be renderred again, which means we will get the latest login status of the current user.
-  const loginStatus = document.querySelector('.welcome-anchor');
   if(loginStatusCode[0] === true) {
+    const loginStatus = document.querySelector('.welcome-anchor');
     loginStatus.innerText = `Welcome! ${loginStatusCode[1]['userName']}`;
     return loginStatusCode[1];
   }
   else {
-    alert('Disastrous accident!!! How can you access here without logging in!!! Check now!!');
+    alert('Login first!');
+    window.location.href = '../Websites/Amazon_products.html';
   }
 }
 
-
-async function renderItemContent(userInfo) {
-  const itemList = await findProductInCartTable(1, userInfo['userId'], undefined, userInfo['userToken']);
-  const products = await getProducts(productsTableUrl);
+async function renderItemContent(userInfo, itemList) {
+  const products = await getProducts(userInfo);
   let cartItemsHTML = `<p class="checkout-prompt">Review your order</p>`;
   const cartItemsContent = document.querySelector('.cart-items-content');
 
@@ -268,6 +268,24 @@ async function renderItemContent(userInfo) {
   cartItemsContent.innerHTML = cartItemsHTML;
 }
 
+function activateOptionSelector(itemList) {
+  const deliveryDateSelector = document.querySelectorAll('.cart-delivery-option-selector'); //here changes the delivery date
+  for(const item of deliveryDateSelector) {
+    item.addEventListener('click', async () => {
+      const loginStatus = await getLoginStatus();
+      if(loginStatus[0] === true) {
+        const userInfo = loginStatus[1];
+        const deliverydate = document.querySelector(`.${item.name}delivery-date`)
+        deliverydate.innerText = `Delivery date: ${item.value}`;
+        await renderOrderSummary(userInfo, itemList); //re-render the order summary content to put on the shipping selection.
+      }
+      else {
+        alert('Please log in first!');
+        window.location.href = '../Websites/Amazon_products.html';
+      }
+    })
+  }
+}
 
 export async function renderCheckoutPage() {
   const userInfo = await renderLoginStatus(); //render the loginStatus and get the userInfo for further searching for user's cart items saved in the backend.
@@ -275,21 +293,12 @@ export async function renderCheckoutPage() {
   // every time we are redirected to this page, it will be renderred again, which means we will get the latest login status of the current user.
 
   //in the future, the code below will be modified to render based on the userInfo above got from the backend.
-  
-  await renderItemContent(userInfo);
+  const itemList = await findProductInCartTable(1, userInfo['userId'], undefined, userInfo['userToken']);
+  await renderItemContent(userInfo, itemList);
 
-  await renderOrderSummary();
+  await renderOrderSummary(userInfo, itemList);
 
-  const deliveryDateSelector = document.querySelectorAll('.cart-delivery-option-selector'); //here changes the delivery date
-
-  for(const item of deliveryDateSelector) {
-    item.addEventListener('click', () => {
-      const deliverydate = document.querySelector(`.${item.name}delivery-date`)
-      deliverydate.innerText = `Delivery date: ${item.value}`;
-
-      renderOrderSummary();
-    })
-  }
+  activateOptionSelector(itemList);
 
   activateUpdateButton();  // here activate the update buttons on checkout page.
   activateDeleteButton();  // here activate the delete buttons on checkout page.

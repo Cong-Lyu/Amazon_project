@@ -19,7 +19,7 @@ async function loginWithoutLocal(loginUrl, email, password) { //Node.js does not
 }
 
 
-export const products = [{
+const productsSample1 = [{
   productId : 'sa21dk12ks1o',
   productName : 'Black and Gray Athletic',
   productRating : 45,
@@ -63,7 +63,7 @@ export const products = [{
   productImageName : '6-piece-non-stick-baking-set'
 }];  //for the initial period when there was no backend only.
 
-const productsSample = [{
+const productsSample2 = [{
   productName : 'Black and Gray Athletic',
   productRating : 45,
   productScore : '87',
@@ -125,8 +125,13 @@ export async function upLoadProducts(productsList) { //Node.js does not support 
 }
 //upLoadProducts(productsSample);   //Node.js does not support localStorage!!!!
 
-export async function getProducts(productsTableUrl) {
-  const response = await fetch(productsTableUrl);
+export async function getProducts(userInfo) {
+  const response = await fetch(productsTableUrl, {
+    method: 'GET',
+    headers: {
+      'user-token': userInfo['userToken']
+    }
+  });
   const productsList = await response.json();
   return productsList;
 }
