@@ -126,12 +126,7 @@ export async function upLoadProducts(productsList) { //Node.js does not support 
 //upLoadProducts(productsSample);   //Node.js does not support localStorage!!!!
 
 export async function getProducts(userInfo) {
-  const response = await fetch(productsTableUrl, {
-    method: 'GET',
-    headers: {
-      'user-token': userInfo['userToken']
-    }
-  });
+  const response = await fetch(productsTableUrl);
   const productsList = await response.json();
   return productsList;
 }

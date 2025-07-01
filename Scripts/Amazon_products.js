@@ -84,7 +84,6 @@ async function renderLoginStatus() {
     return loginStatusCode[1];
   }
   else {
-    console.log('The token expired! -- from Amazon_products.js');
     loginStatus.innerHTML = 
       `<a class="sign-in-anchor" href="./Amazon_login.html">
         Hello! Sign in here
@@ -151,8 +150,10 @@ export async function renderProductsContent() {
 
   productContent.innerHTML = productsContentHTML;
 
-  activateItemQuantity(userInfo);
-
+  if(userInfo !== undefined) {
+    activateItemQuantity(userInfo);
+  }
+  
   activateAddToCartButtons();
 
   activateCartAnchor();

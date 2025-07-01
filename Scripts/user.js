@@ -121,7 +121,6 @@ export async function getLoginStatus() {
   }
   const currentUserInfo = JSON.parse(localStorage.getItem('amazonCurrentUser')); //search for token from users' local storage.
   if(Object.keys(currentUserInfo).length === 0) { //first time to use Amazon or never log in before.
-    console.log('There is nothing in the Amazon current User attribute.');
     return [false, undefined];
   }
   else{

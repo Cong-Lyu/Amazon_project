@@ -1,9 +1,11 @@
 import {findUserIndex} from './user.js';
 import dayjs from 'https://unpkg.com/dayjs@1.11.13/esm/index.js';
 
+const loginUrl = 'https://supplekick-us.backendless.app/api/users/login';
+
 async function loginAttempt(email, password) {
   const accountContainer = document.querySelector('.account-details-container');
-  const login = await fetch(user['userLoginUrl'], {
+  const login = await fetch(loginUrl, {
     method: 'POST',
     headers: {
       'Content-type': 'application/json'
@@ -36,10 +38,7 @@ async function loginAttempt(email, password) {
     const userLoginHistory = JSON.parse(localStorage.getItem('amazonUsersHistory')); //get the account history list
     if(tryfindUserInLocal === -1) {
       userLoginHistory.push(currentUser);
-      console.log(userLoginHistory);
-    }
-    else {
-      console.log(userLoginHistory);
+      localStorage.setItem('amazonUsersHistory', JSON.stringify(userLoginHistory));
     }
     
     //below is to go back to the Amazon products home page.
