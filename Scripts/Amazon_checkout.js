@@ -16,7 +16,7 @@ async function deleteItemInCart(userInfo, productObjectId) {
   }
 }
 
-async function activateUpdateButton() {   // here only activate the update buttons, not click them. The click event only happen in the eventlistener when the update buttons are clicked.
+function activateUpdateButton() {   // here only activate the update buttons, not click them. The click event only happen in the eventlistener when the update buttons are clicked.
   const updateButton = document.querySelectorAll(".cart-product-update-button");
 
   for(const item of updateButton) {
@@ -49,9 +49,8 @@ async function activateUpdateButton() {   // here only activate the update butto
   }
 }
 
-async function activateSaveButton() { // here only activate the save buttons, not click them. The click event only happen in the eventlistener when the save buttons are clicked.
+function activateSaveButton() { // here only activate the save buttons, not click them. The click event only happen in the eventlistener when the save buttons are clicked.
   const saveButton = document.querySelectorAll('.cart-product-save-button');
-
   for(const item of saveButton) {
     const productObjectId = item.dataset.saveProductId.slice(1, 37);  //the unique product identifier.
     const quantityContainer = document.querySelector(`.a${productObjectId}quantity-container`); //This gets the container which constains quantity, save button, delete button HTML.
@@ -70,25 +69,12 @@ async function activateSaveButton() { // here only activate the save buttons, no
         }
         else {
           const itemList = await findProductInCartTable(1, userInfo['userId'], undefined, userInfo['userToken']);//the list of the products in the cart. This returns the objects in cart table!!!, not the products table!!!!
-          quantityContainer.innerHTML = `    
-            <p class="cart-product-quantity a${productObjectId}quantity">
-              Quantity: ${quantityNumber}
-            </p>
-            <button class="cart-product-update-button  cart-product-behave" data-update-product-id="a${productObjectId}update">
-              Update
-            </button>
-            <button class="cart-product-delete-button  cart-product-behave" data-delete-product-id="a${productObjectId}delete">
-              Delete
-            </button>`;  // here, the delete buttons are generated again, which means the former ones and their eventlisteners are both deleted.
-            // item.dataset.updateProductId.slice(1, 13) means take out the product ID saved in the data- attribute and use it in generating the save button, to make it distinct from others.
           const targetObjectInCart = itemList.find(target => target.productObjectId === productObjectId);
           // the sentence below traces back to which one the user is modifying. 
           targetObjectInCart.productQuantity = Number(quantityNumber);//change the quantity to the one set by the user.
           await postProductToCart('PUT', targetObjectInCart, userInfo['userToken']); //update the matching item's quantity attribute in the cart table
 
-          activateUpdateButton();  // here activate the save buttons on checkout page again after clicking the update button.
-
-          activateDeleteButton(); // here activate the delete buttons on checkout page again after clicking the save button.
+          await renderCheckoutPage();// re-render the checkout page with the latest records from cart table.
         }
       }
       else {
@@ -142,8 +128,8 @@ async function renderOrderSummary(userInfo, itemList) { // to generate the order
   const priceNumber = Number(total[1]) + Number(shippingPrice);  //total[1] + shippingTotal
   const totalBeforeTax = String(priceNumber.toFixed(2));
   const totalTax = String((priceNumber * 0.1).toFixed(2));
-
   const totalPrice = String((Number(totalBeforeTax) + Number(totalTax)).toFixed(2)); // total with shipping and tax.
+
   orderSummary.innerHTML = `
     <p class="cart-summary-title">Order Summary</p>
     <div class="cart-summary-item">
