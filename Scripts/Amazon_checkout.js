@@ -273,13 +273,26 @@ function activateOptionSelector(itemList) {
   }
 }
 
+function renderQuantityTitleInHeader(itemList) {
+  console.log(itemList);
+  const quantityTitle = document.querySelector('.items-anchor');
+  let quantityInCart = 0;
+  for(const item of itemList) {
+    quantityInCart += item.productQuantity;
+  }
+  quantityTitle.innerText = `${quantityInCart} items`;
+}
+
 export async function renderCheckoutPage() {
+  
   const userInfo = await renderLoginStatus(); //render the loginStatus and get the userInfo for further searching for user's cart items saved in the backend.
   
   // every time we are redirected to this page, it will be renderred again, which means we will get the latest login status of the current user.
 
   //in the future, the code below will be modified to render based on the userInfo above got from the backend.
   const itemList = await findProductInCartTable(1, userInfo['userId'], undefined, userInfo['userToken']);
+  renderQuantityTitleInHeader(itemList);
+  
   await renderItemContent(userInfo, itemList);
 
   await renderOrderSummary(userInfo, itemList);
