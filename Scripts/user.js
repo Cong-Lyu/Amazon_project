@@ -151,7 +151,7 @@ export const shipping = [{
     shippingPrice: '$9.99 - Shipping'
   }];
 
-export let cart = [{
+let cartSample = [{
   productId: 'sa21dk12ks1o',
   productQuantity: 6,
   productDropDate: '2025-06-05'

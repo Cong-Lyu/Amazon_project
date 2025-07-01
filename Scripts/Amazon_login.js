@@ -1,4 +1,4 @@
-import {findUserIndex, user} from './user.js';
+import {findUserIndex} from './user.js';
 import dayjs from 'https://unpkg.com/dayjs@1.11.13/esm/index.js';
 
 async function loginAttempt(email, password) {
