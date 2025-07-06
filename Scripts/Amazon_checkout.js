@@ -1,113 +1,110 @@
-import {products} from './products.js';
-import {getLoginStatus, user, sumCartItems, shipping} from './user.js'
+import {getLoginStatus, sumCartItems, shipping, findProductInCartTable, postProductToCart} from './user.js'
+import {getProducts} from './products.js';
+const productsTableUrl = 'https://api.backendless.com/059E0E6C-3A70-434F-B0EE-230A6650EEAE/3AB37559-1318-4AAE-8B26-856956A63050/data/products';
+let cartUrl = 'https://api.backendless.com/059E0E6C-3A70-434F-B0EE-230A6650EEAE/3AB37559-1318-4AAE-8B26-856956A63050/data/cart'; //we should put the Id of that specific record which match the conditions we set before in the findProductInCartTable() at the end of this URL if we wanna update.
 
+async function deleteItemInCart(userInfo, productObjectId) {
+  const itemRecord = await findProductInCartTable(0, userInfo['userId'], productObjectId, userInfo['userToken']);
+  const response = await fetch(`${cartUrl}/${itemRecord[0]['objectId']}`, {
+    method: 'DELETE',
+    headers: {
+      'user-token': userInfo['userToken']
+    }
+  }) 
+  if(response.ok) {
+    alert('You have deleted this item!');
+  }
+}
 
 function activateUpdateButton() {   // here only activate the update buttons, not click them. The click event only happen in the eventlistener when the update buttons are clicked.
   const updateButton = document.querySelectorAll(".cart-product-update-button");
-  updateButton.forEach((item) => {
-    const quantityContainer = document.querySelector(`.${item.dataset.updateProductId.slice(0, 13)}quantity-container`);
-    item.addEventListener('click', () => {
-      quantityContainer.innerHTML = `    
-        <p class="cart-product-quantity a${item.dataset.updateProductId.slice(1, 13)}quantity">
-          Quantity: <input class="cart-item-quantity-update a${item.dataset.updateProductId.slice(1, 13)}quantity-number" type="number">
-        </p>
-        <button class="cart-product-save-button  cart-product-behave" data-save-product-id="a${item.dataset.updateProductId.slice(1, 13)}save">
-          Save
-        </button>
-        <button class="cart-product-delete-button  cart-product-behave" data-delete-product-id="a${item.dataset.updateProductId.slice(1, 13)}delete">
-          Delete
-        </button>`;  // here, the delete buttons are generated again, which means the former ones and their eventlisteners are both deleted. 
-        // item.dataset.updateProductId.slice(1, 13) means take out the product ID saved in the data- attribute and use it in generating the save button, to make it distinct from others.
-      
-      activateSaveButton();  // here activate the save buttons on checkout page again after clicking the update button.
 
-      activateDeleteButton(); // here activate the delete buttons on checkout page again after clicking the save button.
-    })
-  })
-
-  
-}
-
-function activateSaveButton() { // here only activate the save buttons, not click them. The click event only happen in the eventlistener when the save buttons are clicked.
-  console.log(user['cart']); // this helps to compare.
-  const saveButton = document.querySelectorAll('.cart-product-save-button');
-  saveButton.forEach((item) => {
-    const quantityContainer = document.querySelector(`.${item.dataset.saveProductId.slice(0, 13)}quantity-container`);
-    item.addEventListener('click', () => { // here tells the save button what to do when it is clicked, but the code below will not be executed unless it is clicked, which means the code inside listener is set up only, ready to be clicked only.
-      const quantityNumber = document.querySelector(`.${item.dataset.saveProductId.slice(0, 13)}quantity-number`);
-      if(quantityNumber.value === 0) {  //when quantity-number is 0,
-        const deleteTargetIndex = user['cart'].findIndex((target) => {   
-          return target.productId === item.dataset.saveProductId.slice(1, 13);  //when quantity-number is 0, here use the product ID saved in the data attribute of the save buttons to find out which item in the cart should be removed, and then re-render the checkout page.
-        })
-        item.addEventListener('click', () => {
-          if(deleteTargetIndex === -1) {
-            alert('Something is wrong about indexing!');
-          }
-          else {
-            user['cart'].splice(deleteTargetIndex, 1);
-            renderCheckoutPage();
-          }
-        })
-      }
-      else if(quantityNumber.value === '') {
-        alert('Please select a quantity for the item.')
-      }
-      else {
+  for(const item of updateButton) {
+    item.addEventListener('click', async () => {
+      const loginStatus = await getLoginStatus();
+      if(loginStatus[0] === true) {
+        const productObjectId = item.dataset.updateProductId.slice(1, 37);
+        const quantityContainer = document.querySelector(`.a${productObjectId}quantity-container`);
         quantityContainer.innerHTML = `    
-          <p class="cart-product-quantity a${item.dataset.saveProductId.slice(1, 13)}quantity">
-            Quantity: ${quantityNumber.value}
+          <p class="cart-product-quantity a${productObjectId}quantity">
+            Quantity: <input class="cart-item-quantity-update a${productObjectId}quantity-number" type="number">
           </p>
-          <button class="cart-product-update-button  cart-product-behave" data-update-product-id="a${item.dataset.saveProductId.slice(1, 13)}update">
-            Update
+          <button class="cart-product-save-button  cart-product-behave" data-save-product-id="a${productObjectId}save">
+            Save
           </button>
-          <button class="cart-product-delete-button  cart-product-behave" data-delete-product-id="a${item.dataset.saveProductId.slice(1, 13)}delete">
+          <button class="cart-product-delete-button  cart-product-behave" data-delete-product-id="a${productObjectId}delete">
             Delete
-          </button>`;  // here, the delete buttons are generated again, which means the former ones and their eventlisteners are both deleted.
+          </button>`;  // here, the delete buttons are generated again, which means the former ones and their eventlisteners are both deleted. 
           // item.dataset.updateProductId.slice(1, 13) means take out the product ID saved in the data- attribute and use it in generating the save button, to make it distinct from others.
         
-
-        const saveTargetIndex = user['cart'].findIndex((target) => {   // here update the modified quantity to the item in the cart.
-          return target.productId === item.dataset.saveProductId.slice(1, 13);  // here use the product ID saved in the data attribute of the delete buttons to find out which item in the cart should be removed, and then re-render the checkout page.
-        })
-        if(saveTargetIndex === -1) {
-          alert('Something is wrong about indexing!');
-        }
-        else {
-          user['cart'][saveTargetIndex].productQuantity = quantityNumber.value;
-          // renderCheckoutPage(); here do not need to re-render the whole checkout page because we have done it in this function.
-        }
-
-        console.log(user['cart']);  // this helps to see if the quantity of the item is modified in the cart.
-
-        activateUpdateButton();  // here activate the save buttons on checkout page again after clicking the update button.
+        activateSaveButton();  // here activate the save buttons on checkout page again after clicking the update button.
 
         activateDeleteButton(); // here activate the delete buttons on checkout page again after clicking the save button.
       }
+      else {
+        alert('Your login has expired, please log in again.');
+        window.location.href = '../Websites/Amazon_products.html';
+      }
     })
-  })
+  }
+}
+
+function activateSaveButton() { // here only activate the save buttons, not click them. The click event only happen in the eventlistener when the save buttons are clicked.
+  const saveButton = document.querySelectorAll('.cart-product-save-button');
+  for(const item of saveButton) {
+    const productObjectId = item.dataset.saveProductId.slice(1, 37);  //the unique product identifier.
+    const quantityContainer = document.querySelector(`.a${productObjectId}quantity-container`); //This gets the container which constains quantity, save button, delete button HTML.
+    item.addEventListener('click', async () => { // here tells the save button what to do when it is clicked, but the code below will not be executed unless it is clicked, which means the code inside listener is set up only, ready to be clicked only.
+      const loginStatus = await getLoginStatus(); //get the latest userToken status.
+      const userInfo = loginStatus[1];
+      if(loginStatus[0] === true) {
+        const quantityNumber = document.querySelector(`.a${productObjectId}quantity-number`).value;
+        if(quantityNumber === '0') {  //when quantity-number is 0,
+          // ------------below is to delete this item totally from cart table in the backend.----------------
+          await deleteItemInCart(userInfo, productObjectId);
+          await renderCheckoutPage();
+        }
+        else if(quantityNumber === '') {
+          alert('Please select a quantity for the item.')
+        }
+        else {
+          const itemList = await findProductInCartTable(1, userInfo['userId'], undefined, userInfo['userToken']);//the list of the products in the cart. This returns the objects in cart table!!!, not the products table!!!!
+          const targetObjectInCart = itemList.find(target => target.productObjectId === productObjectId);
+          // the sentence below traces back to which one the user is modifying. 
+          targetObjectInCart.productQuantity = Number(quantityNumber);//change the quantity to the one set by the user.
+          await postProductToCart('PUT', targetObjectInCart, userInfo['userToken']); //update the matching item's quantity attribute in the cart table
+
+          await renderCheckoutPage();// re-render the checkout page with the latest records from cart table.
+        }
+      }
+      else {
+        alert('Your login has expired, please log in again.');
+        window.location.href = '../Websites/Amazon_products.html';
+      }
+    })
+  }
 }
 
 function activateDeleteButton() {  // here is the function to activate the buttons for removing the item from the cart
-  const deleteButton = document.querySelectorAll('.cart-product-delete-button');  
-  deleteButton.forEach((item) => {
-    const deleteTargetIndex = user['cart'].findIndex((target) => {   
-      return target.productId === item.dataset.deleteProductId.slice(1, 13);  // here use the product ID saved in the data attribute of the delete buttons to find out which item in the cart should be removed, and then re-render the checkout page.
-    })
-    item.addEventListener('click', () => {
-      if(deleteTargetIndex === -1) {
-        alert('Something is wrong about indexing!');
+  const deleteButton = document.querySelectorAll('.cart-product-delete-button'); 
+  for(const item of deleteButton) {
+    item.addEventListener('click', async () => {
+      const loginStatus = await getLoginStatus(); //get the latest userToken status.
+      const userInfo = loginStatus[1];
+      if(loginStatus[0] === true) {
+        const productObjectId = item.dataset.deleteProductId.slice(1, 37);  //the unique product identifier.
+        await deleteItemInCart(userInfo, productObjectId);
+        await renderCheckoutPage();
       }
       else {
-        user['cart'].splice(deleteTargetIndex, 1);
-        renderCheckoutPage();
+        alert('Your login has expired, please log in again.');
+        window.location.href = '../Websites/Amazon_products.html';
       }
     })
-  })
-  console.log(user['cart']);
+  }
 }
 
-
-function renderOrderSummary() { // to generate the order summary content part HTML.
+async function renderOrderSummary(userInfo, itemList) { // to generate the order summary content part HTML.
   const orderSummary = document.querySelector('.cart-summary-content');
   const shippingSelection = document.querySelectorAll('input[type = "radio"]:checked');
   let shippingPrice = ``;  // This is gonna be displaced in the shipping line of the OrderSummary content to show shipping price.
@@ -127,14 +124,17 @@ function renderOrderSummary() { // to generate the order summary content part HT
     })
     shippingPrice = String((shippingPriceCents / 100).toFixed(2));
   }
-  const totalBeforeTax = String((Number(sumCartItems()[1]) + Number(shippingPrice)).toFixed(2)); //total with shipping without tax
-  const totalWithTax = String(((Number(sumCartItems()[1]) + Number(shippingPrice)) * 0.1).toFixed(2)); // tax
-  const totalPrice = String((Number(totalBeforeTax) + Number(totalWithTax)).toFixed(2)); // total with shipping and tax.
+  const total = await sumCartItems(userInfo, itemList);  //total[0] for total quantity; total[1] for totalPrice 
+  const priceNumber = Number(total[1]) + Number(shippingPrice);  //total[1] + shippingTotal
+  const totalBeforeTax = String(priceNumber.toFixed(2));
+  const totalTax = String((priceNumber * 0.1).toFixed(2));
+  const totalPrice = String((Number(totalBeforeTax) + Number(totalTax)).toFixed(2)); // total with shipping and tax.
+
   orderSummary.innerHTML = `
     <p class="cart-summary-title">Order Summary</p>
     <div class="cart-summary-item">
-      <p class="cart-summary-item-name">Items (${sumCartItems()[0]}):</p>
-      <p class="cart-summary-item-price">$${sumCartItems()[1]}</p>
+      <p class="cart-summary-item-name">Items (${total[0]}):</p>
+      <p class="cart-summary-item-price">$${total[1]}</p>
     </div>
     <div class="cart-summary-item">
       <p class="cart-summary-item-name">Shipping & handling:</p>
@@ -146,7 +146,7 @@ function renderOrderSummary() { // to generate the order summary content part HT
     </div>
     <div class="cart-summary-item cart-summary-last-item">
       <p class="cart-summary-item-name">Estimated tax (10%):</p>
-      <p class="cart-summary-item-price">$${totalWithTax}</p>
+      <p class="cart-summary-item-price">$${totalTax}</p>
     </div>
     <div class="cart-summary-item cart-summary-total-item">
       <p class="cart-summary-item-name">Order total:</p>
@@ -155,36 +155,30 @@ function renderOrderSummary() { // to generate the order summary content part HT
     <button class="cart-place-order-button">Place your order</button>`;
 }
 
-
 async function renderLoginStatus() {
   const loginStatusCode = await getLoginStatus();// every time we are redirected to this page, it will be renderred again, which means we will get the latest login status of the current user.
-  console.log(loginStatusCode);
-  const loginStatus = document.querySelector('.welcome-anchor');
   if(loginStatusCode[0] === true) {
-    loginStatus.innerText = `Welcome! ${loginStatusCode[1]}`;
+    const loginStatus = document.querySelector('.welcome-anchor');
+    loginStatus.innerText = `Welcome! ${loginStatusCode[1]['userName']}`;
+    return loginStatusCode[1];
   }
   else {
-    alert('You have not logged in yet. Please log in first.');
+    alert('Login first!');
     window.location.href = '../Websites/Amazon_products.html';
   }
 }
 
-
-
-export async function renderCheckoutPage() {
-  const userInfo = await renderLoginStatus(); //render the loginStatus and get the userInfo for further searching for user's cart items saved in the backend.
-  
-  // every time we are redirected to this page, it will be renderred again, which means we will get the latest login status of the current user.
-
-  //in the future, the code below will be modified to render based on the userInfo above got from the backend.
-
+async function renderItemContent(userInfo, itemList) {
+  const products = await getProducts(userInfo);
   let cartItemsHTML = `<p class="checkout-prompt">Review your order</p>`;
   const cartItemsContent = document.querySelector('.cart-items-content');
-  user['cart'].forEach((item, index) => {
-    const targetProduct = products.find(target => target.productId === item.productId);
+
+  for(const item of itemList) { //here access each item in the cart
+    const targetProduct = products.find(target => target.objectId === item.productObjectId);
+    //here uses 
     cartItemsHTML += `
     <div class="cart-item-container">
-      <p class="delivery-date a${item.productId}delivery-date">Delivery date: please select an option below</p>
+      <p class="delivery-date a${item.productObjectId}delivery-date">Delivery date: please select an option below</p>
       <div class="cart-item-info-container">
         <img class="cart-item-img" src="../Images/products-image/${targetProduct.productImageName}.jpg">
         <div class="cart-product-info">
@@ -194,14 +188,14 @@ export async function renderCheckoutPage() {
           <p class="cart-product-price">
             $${String((targetProduct.productPriceCents / 100).toFixed(2))}
           </p>
-          <div class="cart-product-quantity-and-buttons a${item.productId}quantity-container">
+          <div class="cart-product-quantity-and-buttons a${item.productObjectId}quantity-container">
             <p class="cart-product-quantity ">
               Quantity: ${item.productQuantity}
             </p>
-            <button class="cart-product-update-button  cart-product-behave" data-update-product-id="a${item.productId}update">
+            <button class="cart-product-update-button  cart-product-behave" data-update-product-id="a${item.productObjectId}update">
               Update
             </button>
-            <button class="cart-product-delete-button  cart-product-behave" data-delete-product-id="a${item.productId}delete">
+            <button class="cart-product-delete-button  cart-product-behave" data-delete-product-id="a${item.productObjectId}delete">
               Delete
             </button>
           </div>
@@ -211,7 +205,7 @@ export async function renderCheckoutPage() {
           <p class="cart-delivery-prompt">Choose a delivery option</p>
           
           <div class="cart-delivery-options-container">
-            <input class="cart-delivery-option-selector" name="a${item.productId}" value="${shipping[2].arrivalDate}" data-shipping-price-cents="${shipping[2].shippingPrice}" type="radio">
+            <input class="cart-delivery-option-selector" name="a${item.productObjectId}" value="${shipping[2].arrivalDate}" data-shipping-price-cents="${shipping[2].shippingPrice}" type="radio">
             
             <div class="cart-deliver-arrival-date">
               <p class="cart-delivery-date">
@@ -225,7 +219,7 @@ export async function renderCheckoutPage() {
           </div>
 
           <div class="cart-delivery-options-container">
-            <input class="cart-delivery-option-selector" name="a${item.productId}" value="${shipping[1].arrivalDate}" data-shipping-price-cents="${shipping[1].shippingPrice}" type="radio">
+            <input class="cart-delivery-option-selector" name="a${item.productObjectId}" value="${shipping[1].arrivalDate}" data-shipping-price-cents="${shipping[1].shippingPrice}" type="radio">
             
             <div class="cart-deliver-arrival-date">
               <p class="cart-delivery-date">
@@ -239,7 +233,7 @@ export async function renderCheckoutPage() {
           </div>
 
           <div class="cart-delivery-options-container">
-            <input class="cart-delivery-option-selector" name="a${item.productId}" value="${shipping[0].arrivalDate}" data-shipping-price-cents="${shipping[0].shippingPrice}" type="radio">
+            <input class="cart-delivery-option-selector" name="a${item.productObjectId}" value="${shipping[0].arrivalDate}" data-shipping-price-cents="${shipping[0].shippingPrice}" type="radio">
             
             <div class="cart-deliver-arrival-date">
               <p class="cart-delivery-date">
@@ -254,23 +248,56 @@ export async function renderCheckoutPage() {
         </div>
       </div>
     </div>`
-  })
+  }
+
   //console.log(cartItemsHTML);
   cartItemsContent.innerHTML = cartItemsHTML;
+}
 
-
-  renderOrderSummary();
-
-  
-  const deliveryDateSelector = document.querySelectorAll('.cart-delivery-option-selector'); //here change the delivery date
-  deliveryDateSelector.forEach((item, index) => {
-    item.addEventListener('click', () => {
-      const deliverydate = document.querySelector(`.${item.name}delivery-date`)
-      deliverydate.innerText = `Delivery date: ${item.value}`;
-
-      renderOrderSummary();
+function activateOptionSelector(itemList) {
+  const deliveryDateSelector = document.querySelectorAll('.cart-delivery-option-selector'); //here changes the delivery date
+  for(const item of deliveryDateSelector) {
+    item.addEventListener('click', async () => {
+      const loginStatus = await getLoginStatus();
+      if(loginStatus[0] === true) {
+        const userInfo = loginStatus[1];
+        const deliverydate = document.querySelector(`.${item.name}delivery-date`)
+        deliverydate.innerText = `Delivery date: ${item.value}`;
+        await renderOrderSummary(userInfo, itemList); //re-render the order summary content to put on the shipping selection.
+      }
+      else {
+        alert('Please log in first!');
+        window.location.href = '../Websites/Amazon_products.html';
+      }
     })
-  });
+  }
+}
+
+function renderQuantityTitleInHeader(itemList) {
+  console.log(itemList);
+  const quantityTitle = document.querySelector('.items-anchor');
+  let quantityInCart = 0;
+  for(const item of itemList) {
+    quantityInCart += item.productQuantity;
+  }
+  quantityTitle.innerText = `${quantityInCart} items`;
+}
+
+export async function renderCheckoutPage() {
+  
+  const userInfo = await renderLoginStatus(); //render the loginStatus and get the userInfo for further searching for user's cart items saved in the backend.
+  
+  // every time we are redirected to this page, it will be renderred again, which means we will get the latest login status of the current user.
+
+  //in the future, the code below will be modified to render based on the userInfo above got from the backend.
+  const itemList = await findProductInCartTable(1, userInfo['userId'], undefined, userInfo['userToken']);
+  renderQuantityTitleInHeader(itemList);
+  
+  await renderItemContent(userInfo, itemList);
+
+  await renderOrderSummary(userInfo, itemList);
+
+  activateOptionSelector(itemList);
 
   activateUpdateButton();  // here activate the update buttons on checkout page.
   activateDeleteButton();  // here activate the delete buttons on checkout page.
