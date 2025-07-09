@@ -17,6 +17,6 @@
   "homepage": "https://github.com/Cong-Lyu/Amazon_project#readme",
   "description": "",
   "dependencies": {
-    "lodash": "^4.17.21"
+    "express": "^5.1.0"
   }
 }
