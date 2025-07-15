@@ -67,7 +67,7 @@ async function activateCartAnchor() {
       alert('Please log in first.');
     }
     else {
-      window.location.href = './Amazon_checkout.html';
+      window.location.href = './Websites/Amazon_checkout.html';
     }
   })
 }
@@ -85,7 +85,7 @@ async function renderLoginStatus() {
   }
   else {
     loginStatus.innerHTML = 
-      `<a class="sign-in-anchor" href="./Amazon_login.html">
+      `<a class="sign-in-anchor" href="./Websites/Amazon_login.html">
         Hello! Sign in here
       </a>`;
     return loginStatusCode[1];
@@ -114,13 +114,13 @@ export async function renderProductsContent() {
       productsContentHTML += 
     `<div class="product-container">
       <div class="product-image-container">
-        <img class="product-img" src="../Images/products-image/${item.productImageName}.jpg">
+        <img class="product-img" src="./Images/products-image/${item.productImageName}.jpg">
       </div>
         <p class="product-descrptions">
         ${item.productName}
       </p>
       <div class="rating-box">
-        <img class="rating-img" src="../Images/rate-image/rating-${item.productRating}.jpg">
+        <img class="rating-img" src="./Images/rate-image/rating-${item.productRating}.jpg">
         <p class="scores">
           ${item.productScore}
         </p>

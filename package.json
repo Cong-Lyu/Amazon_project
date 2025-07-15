@@ -1,0 +1,22 @@
+{
+  "name": "amazon",
+  "version": "1.0.0",
+  "main": "Amazon.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Cong-Lyu/Amazon_project.git"
+  },
+  "author": "Cong Lyu",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Cong-Lyu/Amazon_project/issues"
+  },
+  "homepage": "https://github.com/Cong-Lyu/Amazon_project#readme",
+  "description": "",
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}

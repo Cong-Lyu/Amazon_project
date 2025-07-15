@@ -4,8 +4,8 @@
     <title>
       Amazon
     </title>
-    <link rel="stylesheet" href="../Styles/product_website_header.css">
-    <link rel="stylesheet" href="../Styles/product_website_product_content.css">
+    <link rel="stylesheet" href="./Styles/product_website_header.css">
+    <link rel="stylesheet" href="./Styles/product_website_product_content.css">
     <style>
       body {
         height: 6000px;
@@ -16,21 +16,21 @@
   <body style="padding-top: 55px; margin: 0px; ">
     <div class="header">
       <div class="left-section">
-        <a class="amazon-logo-anchor" href="./Amazon_products.html">
-          <img class="amazon-logo" src="../Images/icon-image/amazon-logo-white.jpg">
+        <a class="amazon-logo-anchor" href="./index.html">
+          <img class="amazon-logo" src="./Images/icon-image/amazon-logo-white.jpg">
         </a>
       </div>
       
       <div class="middle-section">
         <input class="search-box" type="text" placeholder="Search">
         <button class="search-button">
-          <img class="search-button-icon" src="../Images/icon-image/search-icon.jpg">
+          <img class="search-button-icon" src="./Images/icon-image/search-icon.jpg">
         </button> 
       </div>
     
       <div class="right-section">
         <div class="login-status-container">
-          <a class="sign-in-anchor" href="./Amazon_login.html">
+          <a class="sign-in-anchor" href="./index.html">
             Hello! Sign in here
           </a>
         </div>
@@ -46,7 +46,7 @@
         </a>
         
         <a class="cart-anchor">
-          <img class="cart-icon" src="../Images/icon-image/cart-icon.jpg">
+          <img class="cart-icon" src="./Images/icon-image/cart-icon.jpg">
           <p class="cart-text">
             Cart
           </p>
@@ -61,7 +61,7 @@
     </div>
     
     <script type="module">
-      import {renderProductsContent} from '../Scripts/Amazon_products.js';
+      import {renderProductsContent} from './Scripts/Amazon_products.js';
       renderProductsContent();// every time we are redirected to this page, it will be renderred again, which means we will get the latest login status of the current user.
     </script>
   </body>

@@ -42,7 +42,7 @@ async function loginAttempt(email, password) {
     }
     
     //below is to go back to the Amazon products home page.
-    window.location.href = "./Amazon_products.html";
+    window.location.href = "../index.html";
   })
   .catch(err => {
     accountContainer.innerHTML = `
