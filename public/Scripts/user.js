@@ -1,10 +1,6 @@
-import {getProducts} from './products.js'
 import dayjs from 'https://unpkg.com/dayjs@1.11.13/esm/index.js';
 const userTokenVarifyUrl = 'https://supplekick-us.backendless.app/api/users/isvalidusertoken';
-
-const productsUrl = 'https://api.backendless.com/059E0E6C-3A70-434F-B0EE-230A6650EEAE/3AB37559-1318-4AAE-8B26-856956A63050/data/products';
-
-let cartUrl = 'https://api.backendless.com/059E0E6C-3A70-434F-B0EE-230A6650EEAE/3AB37559-1318-4AAE-8B26-856956A63050/data/cart'; //we should put the Id of that specific record which match the conditions we set before in the findProductInCartTable() at the end of this URL if we wanna update.
+export const userLoginUrl = 'https://supplekick-us.backendless.app/api/users/login';
 
 const accnountSample = {
   'amazonCurrentUser': {
