@@ -27,46 +27,6 @@ const accnountSample = {
   ]
 }
 
-export async function findProductInCartTable(conditionType, userId, productId, userToken) {
-  let condition;
-  if(conditionType === 0){
-    condition = encodeURIComponent(`userObjectId = '${userId}' AND productObjectId = '${productId}'`);
-  }
-  else {
-    condition = encodeURIComponent(`userObjectId = '${userId}'`);
-  }
-  const response = await fetch(`${cartUrl}?where=${condition}`, {
-    method: 'GET',
-    headers: {
-      'user-token': userToken
-    }
-  });
-  const result = await response.json(); //if there is no matching, it returns an empty list [].
-  return result;
-}
-
-export async function postProductToCart(fetchMethod, recordObject, userToken) {
-  let updateUrl;
-  if(fetchMethod === 'POST') {
-    updateUrl = cartUrl;
-  }
-  else if(fetchMethod === 'PUT') {
-    updateUrl = `${cartUrl}/${recordObject.objectId}`;
-  }
-  else {
-    return 'Something wrong with the input fetch method!!!';
-  }
-  const response = await fetch(updateUrl, {
-    method: fetchMethod,
-    headers: {
-      'user-token': userToken
-    },
-    body: JSON.stringify(recordObject)
-  });
-  const result = await response.json(); //if there is no matching, it returns an empty list [].
-  console.log(result);
-}
-
 export function findUserIndex(userName) {
   const userLoginHistory = JSON.parse(localStorage.getItem('amazonUsersHistory'));
   const index = 0;
@@ -159,19 +119,6 @@ let cartSample = [{
   productQuantity: 2,
   productDropDate: '2025-06-15'
 }];
-
-export async function sumCartItems(userInfo, itemList) {
-  let sumQuantity = 0;
-  let sumPriceCents = 0;
-  const products = await getProducts(userInfo);
-  for(const item of itemList) {
-    sumQuantity += item.productQuantity;
-    const indexInProducts = products.findIndex(target => target.objectId === item.productObjectId);
-    sumPriceCents += products[indexInProducts].productPriceCents * item.productQuantity;
-  }
-  const sumPrice = String((sumPriceCents / 100).toFixed(2));
-  return [sumQuantity, sumPrice];
-}
 
 export async function loginAttempt(email, password) {
   const accountContainer = document.querySelector('.account-details-container');

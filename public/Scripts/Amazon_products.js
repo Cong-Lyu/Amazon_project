@@ -1,6 +1,6 @@
 import {getProducts} from './products.js';
-import {getLoginStatus, findProductInCartTable, postProductToCart} from './user.js';
-
+import {getLoginStatus} from './user.js';
+import { findProductInCartTable, postProductToCart } from './cart.js';
 const productsTableUrl = 'https://api.backendless.com/059E0E6C-3A70-434F-B0EE-230A6650EEAE/3AB37559-1318-4AAE-8B26-856956A63050/data/products';
 
 function sleep(ms) {

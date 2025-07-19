@@ -1,6 +1,6 @@
-import {getLoginStatus, sumCartItems, shipping, findProductInCartTable, postProductToCart} from './user.js'
+import {getLoginStatus, shipping} from './user.js'
 import {getProducts} from './products.js';
-import { deleteItemInCart } from './cart.js';
+import { deleteItemInCart, findProductInCartTable, postProductToCart, sumCartItems} from './cart.js';
 import { productsTableUrl } from '.products.js';
 
 function activateUpdateButton() {   // here only activate the update buttons, not click them. The click event only happen in the eventlistener when the update buttons are clicked.
