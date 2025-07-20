@@ -1,7 +1,7 @@
 import dayjs from 'https://unpkg.com/dayjs@1.11.13/esm/index.js';
 
-const userTokenVarifyUrl = 'https://supplekick-us.backendless.app/api/users/isvalidusertoken';
-export const userLoginUrl = 'https://supplekick-us.backendless.app/api/users/login';
+const userTokenVarifyUrl = 'http://localhost:5000/api/token/isvalidusertoken';
+export const userLoginUrl = 'http://localhost:5000/api/users/login';
 
 const accnountSample = {
   'amazonCurrentUser': {
