@@ -1,7 +1,7 @@
 import {getLoginStatus, shipping} from './user.js'
 import {getProducts} from './products.js';
 import { deleteItemInCart, findProductInCartTable, postProductToCart, sumCartItems} from './cart.js';
-import { productsTableUrl } from '.products.js';
+import { productsTableUrl } from './products.js';
 
 function activateUpdateButton() {   // here only activate the update buttons, not click them. The click event only happen in the eventlistener when the update buttons are clicked.
   const updateButton = document.querySelectorAll(".cart-product-update-button");

@@ -1,4 +1,5 @@
 import dayjs from 'https://unpkg.com/dayjs@1.11.13/esm/index.js';
+
 const userTokenVarifyUrl = 'https://supplekick-us.backendless.app/api/users/isvalidusertoken';
 export const userLoginUrl = 'https://supplekick-us.backendless.app/api/users/login';
 
@@ -118,7 +119,7 @@ let cartSample = [{
 
 export async function loginAttempt(email, password) {
   const accountContainer = document.querySelector('.account-details-container');
-  const login = await fetch(loginUrl, {
+  const login = await fetch(userLoginUrl, {
     method: 'POST',
     headers: {
       'Content-type': 'application/json'
