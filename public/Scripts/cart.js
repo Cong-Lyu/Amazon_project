@@ -1,5 +1,5 @@
 import {getProducts} from './products.js'
-let cartUrl = 'https://api.backendless.com/059E0E6C-3A70-434F-B0EE-230A6650EEAE/3AB37559-1318-4AAE-8B26-856956A63050/data/cart'; //we should put the Id of that specific record which match the conditions we set before in the findProductInCartTable() at the end of this URL if we wanna update.
+let cartUrl = 'http://localhost:5000/api/cart'; //we should put the Id of that specific record which match the conditions we set before in the findProductInCartTable() at the end of this URL if we wanna update.
 
 export async function deleteItemInCart(userInfo, productObjectId) {
   const itemRecord = await findProductInCartTable(0, userInfo['userId'], productObjectId, userInfo['userToken']);
@@ -17,12 +17,12 @@ export async function deleteItemInCart(userInfo, productObjectId) {
 export async function findProductInCartTable(conditionType, userId, productId, userToken) {
   let condition;
   if(conditionType === 0){
-    condition = encodeURIComponent(`userObjectId = '${userId}' AND productObjectId = '${productId}'`);
+    condition = `userObjectId=${userId}&productObjectId=${productId}`;
   }
   else {
-    condition = encodeURIComponent(`userObjectId = '${userId}'`);
+    condition = `userObjectId=${userId}`;
   }
-  const response = await fetch(`${cartUrl}?where=${condition}`, {
+  const response = await fetch(`${cartUrl}?${condition}`, {
     method: 'GET',
     headers: {
       'user-token': userToken
@@ -33,6 +33,7 @@ export async function findProductInCartTable(conditionType, userId, productId, u
 }
 
 export async function postProductToCart(fetchMethod, recordObject, userToken) {
+  console.log(recordObject)
   let updateUrl;
   if(fetchMethod === 'POST') {
     updateUrl = cartUrl;
@@ -46,12 +47,12 @@ export async function postProductToCart(fetchMethod, recordObject, userToken) {
   const response = await fetch(updateUrl, {
     method: fetchMethod,
     headers: {
+      'Content-Type': 'application/json',
       'user-token': userToken
     },
     body: JSON.stringify(recordObject)
   });
   const result = await response.json(); //if there is no matching, it returns an empty list [].
-  console.log(result);
 }
 
 export async function sumCartItems(userInfo, itemList) {

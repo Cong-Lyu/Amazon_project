@@ -24,23 +24,24 @@ export async function postToCartButton(methodType, productQuantity, userInfo, pr
     //await sleep(4000);// This is to test if the number I got before in the console.log(isProductAlreadyInCart); from the cart table is the number that has not been changed.
     isProductAlreadyInCart[0]['productQuantity'] += Number(productQuantity);//the updated quantity should be the former quantity plus the new quantity the user selected here.
     await postProductToCart('PUT', isProductAlreadyInCart[0], userInfo['userToken']);
+    
     alert('This item in your cart has been updated!');
     productAmount.innerText = String(Number(productAmount.innerText) + Number(productQuantity));
   }
-  
 }
 
 
 async function activateAddToCartButtons() {  //userInfo here keeps the login Info including userName, userToken, userObjectId.
   const addToCartButtons = document.querySelectorAll('.Add-to-Cart');
   for(const item of addToCartButtons){
-    const productObjectId = item.dataset.addToCartProductId.slice(1, 37); // get the product object Id out for later use.
+    const productObjectId = item.dataset.addToCartProductId.slice(1, 2); // get the product object Id out for later use.
+    
     item.addEventListener('click', async () => {
       const productQuantity = document.querySelector(`.a${productObjectId}product-quantity-selector`).value;
       const loginStatus = await getLoginStatus(); // to check if the login info is still valid. This should only check when the button is clicked!!! This should be done before any other step below as token is required below.
       if(loginStatus[0] === true) { //token is valid.
         const userInfo = loginStatus[1];
-        const isProductAlreadyInCart = await findProductInCartTable(0, userInfo['userId'], productObjectId, userInfo['userToken']); //try to find out if the product is already in the cart. If so, it returns a list where contains the record object.
+        const isProductAlreadyInCart = await findProductInCartTable(0, userInfo['userId'], productObjectId, userInfo['userToken']);///// //try to find out if the product is already in the cart. If so, it returns a list where contains the record object.
         if(isProductAlreadyInCart.length >= 2) {
           alert('Disasterous error happens!!! Check backend now, there are two or more records match the conditions');
         }
