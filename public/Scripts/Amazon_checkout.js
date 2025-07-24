@@ -1,20 +1,7 @@
-import {getLoginStatus, sumCartItems, shipping, findProductInCartTable, postProductToCart} from './user.js'
+import {getLoginStatus, shipping} from './user.js'
 import {getProducts} from './products.js';
-const productsTableUrl = 'https://api.backendless.com/059E0E6C-3A70-434F-B0EE-230A6650EEAE/3AB37559-1318-4AAE-8B26-856956A63050/data/products';
-let cartUrl = 'https://api.backendless.com/059E0E6C-3A70-434F-B0EE-230A6650EEAE/3AB37559-1318-4AAE-8B26-856956A63050/data/cart'; //we should put the Id of that specific record which match the conditions we set before in the findProductInCartTable() at the end of this URL if we wanna update.
-
-async function deleteItemInCart(userInfo, productObjectId) {
-  const itemRecord = await findProductInCartTable(0, userInfo['userId'], productObjectId, userInfo['userToken']);
-  const response = await fetch(`${cartUrl}/${itemRecord[0]['objectId']}`, {
-    method: 'DELETE',
-    headers: {
-      'user-token': userInfo['userToken']
-    }
-  }) 
-  if(response.ok) {
-    alert('You have deleted this item!');
-  }
-}
+import { deleteItemInCart, findProductInCartTable, postProductToCart, sumCartItems} from './cart.js';
+import { productsTableUrl } from './products.js';
 
 function activateUpdateButton() {   // here only activate the update buttons, not click them. The click event only happen in the eventlistener when the update buttons are clicked.
   const updateButton = document.querySelectorAll(".cart-product-update-button");
@@ -23,7 +10,7 @@ function activateUpdateButton() {   // here only activate the update buttons, no
     item.addEventListener('click', async () => {
       const loginStatus = await getLoginStatus();
       if(loginStatus[0] === true) {
-        const productObjectId = item.dataset.updateProductId.slice(1, 37);
+        const productObjectId = item.dataset.updateProductId.slice(1, 2);
         const quantityContainer = document.querySelector(`.a${productObjectId}quantity-container`);
         quantityContainer.innerHTML = `    
           <p class="cart-product-quantity a${productObjectId}quantity">
@@ -52,7 +39,7 @@ function activateUpdateButton() {   // here only activate the update buttons, no
 function activateSaveButton() { // here only activate the save buttons, not click them. The click event only happen in the eventlistener when the save buttons are clicked.
   const saveButton = document.querySelectorAll('.cart-product-save-button');
   for(const item of saveButton) {
-    const productObjectId = item.dataset.saveProductId.slice(1, 37);  //the unique product identifier.
+    const productObjectId = item.dataset.saveProductId.slice(1, 2);  //the unique product identifier.
     const quantityContainer = document.querySelector(`.a${productObjectId}quantity-container`); //This gets the container which constains quantity, save button, delete button HTML.
     item.addEventListener('click', async () => { // here tells the save button what to do when it is clicked, but the code below will not be executed unless it is clicked, which means the code inside listener is set up only, ready to be clicked only.
       const loginStatus = await getLoginStatus(); //get the latest userToken status.
@@ -69,7 +56,7 @@ function activateSaveButton() { // here only activate the save buttons, not clic
         }
         else {
           const itemList = await findProductInCartTable(1, userInfo['userId'], undefined, userInfo['userToken']);//the list of the products in the cart. This returns the objects in cart table!!!, not the products table!!!!
-          const targetObjectInCart = itemList.find(target => target.productObjectId === productObjectId);
+          const targetObjectInCart = itemList.find(target => target.productObjectId === Number(productObjectId));
           // the sentence below traces back to which one the user is modifying. 
           targetObjectInCart.productQuantity = Number(quantityNumber);//change the quantity to the one set by the user.
           await postProductToCart('PUT', targetObjectInCart, userInfo['userToken']); //update the matching item's quantity attribute in the cart table
@@ -92,7 +79,7 @@ function activateDeleteButton() {  // here is the function to activate the butto
       const loginStatus = await getLoginStatus(); //get the latest userToken status.
       const userInfo = loginStatus[1];
       if(loginStatus[0] === true) {
-        const productObjectId = item.dataset.deleteProductId.slice(1, 37);  //the unique product identifier.
+        const productObjectId = item.dataset.deleteProductId.slice(1, 2);  //the unique product identifier.
         await deleteItemInCart(userInfo, productObjectId);
         await renderCheckoutPage();
       }
